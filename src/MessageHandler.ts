@@ -22,7 +22,7 @@ export class MessageHandler {
     }
 
     async sendMessage(message: Message, helpStr: string) {
-        let channel : Channel | null = await this.client.channels.fetch(message.channelId);
+        const channel : Channel | null = await this.client.channels.fetch(message.channelId);
         (channel as TextChannel).send(helpStr);
         return Promise.resolve();
     }
@@ -39,7 +39,7 @@ export class MessageHandler {
             return Promise.resolve(false);
         }
 
-        let messageString = 
+        const messageString = 
 
             `\`\`\`----------------------PoB Check----------------------
 Stats >

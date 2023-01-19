@@ -1,8 +1,9 @@
-import { Client, Events, GatewayIntentBits, Message, Channel, TextChannel } from 'discord.js';
+import { Client, Events, GatewayIntentBits, Message } from 'discord.js';
 import * as dotenv from 'dotenv';
 import { MessageHandler } from './MessageHandler';
+import path from 'node:path'
 
-dotenv.config({ path: '.\\build\\resources\\config.env' });
+dotenv.config({ path: path.join('src', 'resources', 'config.env') });
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 const messageHandler = new MessageHandler(client);

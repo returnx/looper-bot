@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { Message } from 'discord.js';
@@ -57,23 +59,23 @@ export class PlayerData {
 
     async initlizeData() {
 
-        let url : RegExpMatchArray | null = this.message.content.match(/\bhttps?:\/\/\S+/gi);
+        const url : RegExpMatchArray | null = this.message.content.match(/\bhttps?:\/\/\S+/gi);
 
-        if(url![0].includes('pastebin')) {
+        if(url?.[0].includes('pastebin')) {
             url![0] = url![0].replace('pastebin.com','pobb.in')
         }
        
         const pobHTML = await axios.get(url![0]);
         const $ = cheerio.load(pobHTML.data);
-        let buffer = Buffer.from($('textarea').text(), 'base64');
-        let data = zlib.inflateSync(buffer);
+        const buffer = Buffer.from($('textarea').text(), 'base64');
+        const data = zlib.inflateSync(buffer);
 
         const jsonData = await xml2js.parseStringPromise(data)
 
         // Prepare stats
         for(let i  =0; i < jsonData.PathOfBuilding.Build[0].PlayerStat.length ; i++) {
-            let stat = jsonData.PathOfBuilding.Build[0].PlayerStat[i].$.stat;
-            let value =  jsonData.PathOfBuilding.Build[0].PlayerStat[i].$.value;
+            const stat = jsonData.PathOfBuilding.Build[0].PlayerStat[i].$.stat;
+            const value =  jsonData.PathOfBuilding.Build[0].PlayerStat[i].$.value;
             
             this.playerStats[stat] = value;
         }
@@ -81,7 +83,7 @@ export class PlayerData {
         // console.log
 
         for(let i = 0; i < jsonData.PathOfBuilding.Skills[0].SkillSet[0].Skill.length; i++ ) {
-            let slot = jsonData.PathOfBuilding.Skills[0].SkillSet[0].Skill[i];
+            const slot = jsonData.PathOfBuilding.Skills[0].SkillSet[0].Skill[i];
             if(slot.Gem!=undefined) {
                 for(let i = 0; i <slot.Gem.length; i++) {
                     if(slot.Gem[i].$.nameSpec === 'Summon Skeletons') {
@@ -117,9 +119,9 @@ export class PlayerData {
         }
 
         // Skeleton Duration
-        let toDustArray = data.toString().match(/\d\d[%] reduced Skeleton Duration/gm);
+        const toDustArray = data.toString().match(/\d\d[%] reduced Skeleton Duration/gm);
 
-        for(var item of toDustArray!) {
+        for(const item of toDustArray!) {
             this.totalDust = this.totalDust + parseInt( item.substring(0, 2) );
         }
 
@@ -139,9 +141,9 @@ export class PlayerData {
             reducedDuration = reducedDuration + 15;
         }
 
-        let reduction = (this.totalDust + reducedDuration + this.minionSpeed.quality*2)/100;
+        const reduction = (this.totalDust + reducedDuration + this.minionSpeed.quality*2)/100;
 
-        var finalReduced = 20 * (1 - reduction);
+        let finalReduced = 20 * (1 - reduction);
 
         if(this.lessDurationMastery == "Yes") {
             finalReduced = finalReduced * 0.9;
@@ -160,28 +162,28 @@ export class PlayerData {
         }
 
         // Physical hits as elemental damage
-        let physAsEle = data.toString().match(/\d+[%] of Physical Damage from Hits taken as (Cold|Fire|Lightning) Damage/gm);
+        const physAsEle = data.toString().match(/\d+[%] of Physical Damage from Hits taken as (Cold|Fire|Lightning) Damage/gm);
 
         if(physAsEle != null) {
             this.physAsEle = "Yes"
         }
 
         // Mana recoup
-        let battleRouse = data.toString().match(/5289/gm);
+        const battleRouse = data.toString().match(/5289/gm);
         if(battleRouse!=null) {
 
             this.manaRecoup = this.manaRecoup + 10;
 
-            let manaMastery = data.toString().match(/59064/gm);
+            const manaMastery = data.toString().match(/59064/gm);
             if(manaMastery!=null) {
                 this.manaRecoup = this.manaRecoup + 10;
             }
         }
 
-        let itemRecoup = data.toString().match(/\d[%] of Damage taken Recouped as Mana/gm);
+        const itemRecoup = data.toString().match(/\d[%] of Damage taken Recouped as Mana/gm);
 
         if(itemRecoup!=null) {
-            for(var item of itemRecoup!) {
+            for(const item of itemRecoup!) {
                 this.manaRecoup = this.manaRecoup + parseInt( item.substring(0, 1));
             }
         }
@@ -197,16 +199,16 @@ export class PlayerData {
             this.lifeRecoup = this.lifeRecoup + 6;
         }
 
-        let implicitRecoup = data.toString().match(/\d+[%] of Physical Damage taken Recouped as Life/gm);
+        const implicitRecoup = data.toString().match(/\d+[%] of Physical Damage taken Recouped as Life/gm);
         if(implicitRecoup!=null) {
-            for(var item of implicitRecoup!) {
+            for(const item of implicitRecoup!) {
                 this.lifeRecoup = this.lifeRecoup + parseInt( item.substring(0, 2));
             }
         }
 
-        let itemLifeRecoup = data.toString().match(/\d+[%] of Damage taken Recouped as Life/gm)
+        const itemLifeRecoup = data.toString().match(/\d+[%] of Damage taken Recouped as Life/gm)
         if(itemLifeRecoup!=null) {
-            for(var item of itemLifeRecoup!) {
+            for(const item of itemLifeRecoup!) {
                 this.lifeRecoup = this.lifeRecoup + parseInt( item.substring(0, 2));
             }
             
@@ -246,17 +248,17 @@ export class PlayerData {
             // TODO -- Handle flask suffix increased ward, handle incrased effect of flasks
         }
 
-        let flaskIncEffect = data.toString().match(/Flasks applied to you have \d+% increased Effect/gm);
+        const flaskIncEffect = data.toString().match(/Flasks applied to you have \d+% increased Effect/gm);
         if(flaskIncEffect!=null) {
             this.flaskIncEffect = "Yes"
         }
 
-        let wandCheck = data.toString().match(/Spectral Spirits when Equipped/gm);
+        const wandCheck = data.toString().match(/Spectral Spirits when Equipped/gm);
         if(wandCheck != null) {
             this.swapWandCount = wandCheck.length;
         }
 
-        let ringCount = data.toString().match(/Heartbound Loop/gm);
+        const ringCount = data.toString().match(/Heartbound Loop/gm);
         if(ringCount?.length == 1) {
             this.loopRings = "One";
             this.loopRingsCount = 1;
@@ -273,7 +275,7 @@ export class PlayerData {
             skeletonCount = 4;
         }
 
-        let skeletonDamage = 420 * this.loopRingsCount * skeletonCount;
+        const skeletonDamage = 420 * this.loopRingsCount * skeletonCount;
 
         let frDamage = 0;
        

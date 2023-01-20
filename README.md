@@ -15,11 +15,3 @@ Starts the app in production by first building the project with `npm run build`,
 #### `npm run build`
 
 Builds the app at `build`, cleaning the folder first.
-
-#### `npm run prettier-format`
-
-Format your code.
-
-#### `npm run prettier-watch`
-
-Format your code in watch mode, waiting for file changes.

@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import axios from 'axios';
 import * as cheerio from 'cheerio';
+import { data } from 'cheerio/lib/api/attributes';
 import { Message } from 'discord.js';
 import * as zlib from 'node:zlib'
 import xml2js from 'xml2js';
@@ -27,7 +28,7 @@ export class PlayerData {
     lessDurationMastery = "No";
     lifeRecoup = 0;
     manaRecoup = 0;
-    cdr = "0%";
+    cdr = 0;
     skeletonDuration = 0;
     MindOverMatter = "No";
     pathfinder = "No";
@@ -37,6 +38,12 @@ export class PlayerData {
     swapWandCount = 0;
     loopRings = "Two";
     loopRingsCount = 2;
+
+    skeletonDamage = 0;
+    frDamage = 0;
+    totalLoopDamage = 0;
+    frWard = "No/Bad";
+    bodyLoopSpeed = "Fail";
 
     constructor(message : Message) {
         this.message = message; 
@@ -214,13 +221,15 @@ export class PlayerData {
             
         }        
 
-        if(this.playerStats['Cooldown'] === '0.198') {
-            this.cdr = "27%";
-        } else if(this.playerStats['Cooldown'] === '0.231') {
-            this.cdr = "9%";
-        }
+        const cdrList = data.toString().match(/\d+% increased Cooldown Recovery Rate$/gm)
+        if(cdrList!=null) {
 
-   
+            for(const cdrMod of cdrList) {
+                this.cdr = this.cdr + parseInt(cdrMod.substring(0, cdrMod.indexOf('%')));
+            }
+            console.log('cdr is ' + this.cdr);
+        }
+    
         if(data.toString().match(/34098/gm)!=null) {
             this.MindOverMatter = "Yes";
         }
@@ -259,30 +268,81 @@ export class PlayerData {
         }
 
         const ringCount = data.toString().match(/Heartbound Loop/gm);
+
         if(ringCount?.length == 1) {
             this.loopRings = "One";
             this.loopRingsCount = 1;
+        } else {
+            this.loopRingsCount = 2;
         }
 
-
-        // Math time now
-        let skeletonCount = 2;
+        this.initLoopDamage();
         
+        return Promise.resolve();
+    }
+
+    initLoopDamage() {
+        // Math time now
+
+        // const ringList = data.toString().match(/\d+ Physical Damage taken on Minion Death/);
+        
+        let skeletonCount = 2;
+
         if(this.skeletonGem.level === "11") {
             skeletonCount = 3;
         }
+
         if(this.skeletonGem.level === "20" || this.skeletonGem.level ==="21" ) {
             skeletonCount = 4;
         }
 
-        const skeletonDamage = 420 * this.loopRingsCount * skeletonCount;
+        this.skeletonDamage = 420 * this.loopRingsCount * skeletonCount;
 
-        let frDamage = 0;
-       
-        frDamage = parseInt(this.playerStats['Life']) * 0.4  + parseInt(this.playerStats['EnergyShield']) * 0.25;
-        frDamage = frDamage * (1 - parseInt(this.playerStats['ChaosResist'])/100);
+        this.frDamage = Math.floor((parseInt(this.playerStats['Life']) * 0.4  + parseInt(this.playerStats['EnergyShield']) * 0.25) * (1 - parseInt(this.playerStats['ChaosResist'])/100));
+        
+        this.totalLoopDamage = this.skeletonDamage + this.frDamage;
 
-        return Promise.resolve();
+        let threshold;
+        let gLevel = parseInt(this.bodyCWDT.level);
+    
+        switch(gLevel) {
+            case 1: threshold = 528; break;
+            case 2: threshold = 583; break;
+            case 3: threshold = 661; break;
+            case 4: threshold = 725; break;
+            case 5: threshold = 812; break;
+            case 6: threshold = 897; break;
+            case 7: threshold = 1003; break;
+            case 8: threshold = 1107; break;
+            case 9: threshold = 1221; break;
+            case 10: threshold = 1354; break;
+            case 11: threshold = 1485; break;
+            case 12: threshold = 1635; break;
+            case 13: threshold = 1804; break;
+            case 14: threshold = 1980; break;
+            case 15: threshold = 2184; break;
+            case 16: threshold = 2394; break;
+            case 17: threshold = 2621; break;
+            case 18: threshold = 2874; break;
+            case 19: threshold = 3142; break;
+            case 20: threshold = 3272; break;
+            case 21: threshold = 3580; break;
+            case 22: threshold = 3950; break;
+            case 23: threshold = 4350; break;
+            default: threshold = 3580; // level 21
+        }
+        
+        if(this.bodyCWDT.qualityId === "Divergent") {
+            threshold = threshold * (1 - this.bodyCWDT.quality/100);
+        }
+
+        if(this.totalLoopDamage >= threshold) {
+            this.bodyLoopSpeed = "Full Speed";
+        }
+        
+        if(this.playerStats['Ward'] >= this.frDamage ) {
+            this.frWard = "Yes/Good";
+        }
     }
 
 }

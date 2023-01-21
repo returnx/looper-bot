@@ -302,36 +302,15 @@ export class PlayerData {
         
         this.totalLoopDamage = this.skeletonDamage + this.frDamage;
 
-        let threshold;
-        let gLevel = parseInt(this.bodyCWDT.level);
-    
-        switch(gLevel) {
-            case 1: threshold = 528; break;
-            case 2: threshold = 583; break;
-            case 3: threshold = 661; break;
-            case 4: threshold = 725; break;
-            case 5: threshold = 812; break;
-            case 6: threshold = 897; break;
-            case 7: threshold = 1003; break;
-            case 8: threshold = 1107; break;
-            case 9: threshold = 1221; break;
-            case 10: threshold = 1354; break;
-            case 11: threshold = 1485; break;
-            case 12: threshold = 1635; break;
-            case 13: threshold = 1804; break;
-            case 14: threshold = 1980; break;
-            case 15: threshold = 2184; break;
-            case 16: threshold = 2394; break;
-            case 17: threshold = 2621; break;
-            case 18: threshold = 2874; break;
-            case 19: threshold = 3142; break;
-            case 20: threshold = 3272; break;
-            case 21: threshold = 3580; break;
-            case 22: threshold = 3950; break;
-            case 23: threshold = 4350; break;
-            default: threshold = 3580; // level 21
+        const gLevel = parseInt(this.bodyCWDT.level) + 2;
+        const cwdtArray = [ 528, 583, 661, 725, 812, 897, 1003, 1107, 1221, 1354, 1485, 1635, 1804, 1980, 2184, 2394, 2621, 2874, 3142, 3272, 3580, 3950, 4350 ];
+        let threshold
+        if(gLevel <24) {
+            threshold= cwdtArray[gLevel];
+        } else {
+            threshold = 4350;
         }
-        
+
         if(this.bodyCWDT.qualityId === "Divergent") {
             threshold = threshold * (1 - this.bodyCWDT.quality/100);
         }

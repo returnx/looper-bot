@@ -298,17 +298,19 @@ export class PlayerData {
 
         this.skeletonDamage = 420 * this.loopRingsCount * skeletonCount;
 
-        this.frDamage = Math.floor((parseInt(this.playerStats['Life']) * 0.4  + parseInt(this.playerStats['EnergyShield']) * 0.25) * (1 - parseInt(this.playerStats['ChaosResist'])/100));
+        this.frDamage = Math.floor((parseInt(this.playerStats['Life']) * 0.4  
+                        + parseInt(this.playerStats['EnergyShield']) * 0.25) 
+                        * (1 - parseInt(this.playerStats['ChaosResist'])/100));
         
         this.totalLoopDamage = this.skeletonDamage + this.frDamage;
 
-        const gLevel = parseInt(this.bodyCWDT.level) + 2;
+        const gLevel = parseInt(this.bodyCWDT.level) + 2 - 1;
         const cwdtArray = [ 528, 583, 661, 725, 812, 897, 1003, 1107, 1221, 1354, 1485, 1635, 1804, 1980, 2184, 2394, 2621, 2874, 3142, 3272, 3580, 3950, 4350 ];
         let threshold
         if(gLevel <24) {
             threshold= cwdtArray[gLevel];
         } else {
-            threshold = 4350;
+            threshold = 9999;
         }
 
         if(this.bodyCWDT.qualityId === "Divergent") {

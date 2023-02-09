@@ -1,5 +1,6 @@
 import { Client, Message, Channel, TextChannel } from 'discord.js';
 import { PlayerData } from './PlayerData';
+import {mana, rareRing} from './helpStrings.js';
 
 export class MessageHandler {
 
@@ -17,8 +18,14 @@ export class MessageHandler {
                 await this.handlePoB(message);
             }
         }
-        if (message.content.startsWith("help mana") || message.content.startsWith("help multiple swaps"))
-            await this.sendMessage(message, "Testing messages");
+
+        if (message.content.startsWith("help mana") || message.content.startsWith("help multiple swaps") || message.content.startsWith("help swaps")) {
+            await this.sendMessage(message, mana);
+        }
+
+        if (message.content.startsWith("help rare")) {
+            await this.sendMessage(message, rareRing);
+        }
     }
 
     async sendMessage(message: Message, helpStr: string) {
@@ -71,6 +78,20 @@ Swap Weapons - ${playerData.swapWandCount}
 [Body CWDT         - ${playerData.bodyCWDT.qualityId} ${playerData.bodyCWDT.level}/${playerData.bodyCWDT.quality}]  [Weapon CWDT      - ${playerData.weaponCWDT.qualityId} ${playerData.weaponCWDT.level}/${playerData.weaponCWDT.quality}]
 \`\`\``;
         this.sendMessage(message, messageString);
+
         
+        if(playerData.fixArray.length!=0) {
+
+            let finalMessage : string = '';
+
+            for(let i = 0; i < playerData.fixArray.length; i++) {
+                finalMessage = finalMessage + playerData.fixArray[i] + '\n';
+            }
+
+            let finalMsg = `\`\`\`diff
+${finalMessage}
+\`\`\``
+            this.sendMessage(message, finalMsg);
+        }
     }
 }

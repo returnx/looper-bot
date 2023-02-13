@@ -76,4 +76,42 @@ Weapon - Divergent 21/20
 
 \`\`\``;
 
-export { mana, rareRing}
+const upgrade = `\`\`\`
+How To Upgrade For More  Damage
+
+Min Maxed Pandamonious PoB - https://pobb.in/ScJ_COw__2E7
+Min Maxed Ashes PoB -  https://pobb.in/FcFukcjGRUVs
+
+Upgrade In Any Order!
+
+    -- Level 100 - 5 Ways Carry
+    -- All Damage and Support Gems 20% quality
+    -- Awakened Support Gems
+    -- Rare Jewels With Crit / Spell Damage -- Use the link in forum guide
+    -- Divergent Righteous Fire, Phantasmal Sigil of Power
+    -- Amulet apply Turbulent Catalyst for Damage
+    -- Ward items with High Resistance Suffix
+    -- 4 Flask Upgrade Use Dying Sun 4th flask
+    -- Weapon Harvest Enchant Quality For Elemental Damage
+    -- Watcher's With Cold Pen or Cold Damage
+    -- Watcher's With Plus Crit Damage for Hatred
+    -- Large cluster upgrade with 3 notables
+    -- A Good Timeless Jewel
+    -- Rare Ring Upgrade
+    -- 27% CDR
+    -- Heartbound Rings With Better Corrupted Implicits
+    -- Helm Enchant Either RF or Ice Spear damage
+    -- Boots Enchant Cold damage when hit
+    -- Belt Lab Enchant
+    -- Whispers of Doom Anonint on Amulet, self cast Frostbite
+
+Please see the Min Maxed PoB to see how its done
+Save 150  Divine Switch to Omni POB, Check out the 300 Divines Omni PoB how to do it
+Omni PoB -> https://pobb.in/Smfr5iIizeBs 
+Omni tress are squishy, Omni Spell Suppress is good.
+
+Good luck! Don't be Afraid! Go Bold!
+\`\`\``;
+
+
+export { mana, rareRing, upgrade}

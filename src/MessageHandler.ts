@@ -69,7 +69,6 @@ Loop Rings - ${playerData.loopRings}
 
 MindOverMatter - ${playerData.MindOverMatter}
 Pathfinder - ${playerData.pathfinder}
-Flask Mastery - ${playerData.flaskMastery}
 Staff Defense Mastery - ${playerData.staffDefenseMastery}
 
 [Life Recoup - ${playerData.lifeRecoup}] [Mana Recoup - ${playerData.manaRecoup}]
@@ -86,13 +85,13 @@ Swap Weapons - ${playerData.swapWandCount}
         
         if(playerData.fixArray.length!=0) {
 
-            let finalMessage : string = '';
+            let finalMessage = '';
 
             for(let i = 0; i < playerData.fixArray.length; i++) {
                 finalMessage = finalMessage + playerData.fixArray[i] + '\n';
             }
 
-            let finalMsg = `\`\`\`diff
+            const finalMsg = `\`\`\`diff
 ${finalMessage}
 \`\`\``
             this.sendMessage(message, finalMsg);

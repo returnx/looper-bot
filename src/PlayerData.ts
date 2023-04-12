@@ -254,11 +254,11 @@ export class PlayerData {
             this.fixArray.push("- Missing Pathfinder Ascendancy");
         }
 
-        if(data.toString().match(/59906/gm)!=null) {
-            this.flaskMastery = "Yes";
-        } else {
-            this.fixArray.push('- You are missing Utility flask mastery, check and compare your tree');
-        }
+        // if(data.toString().match(/59906/gm)!=null) {
+        //     this.flaskMastery = "Yes";
+        // } else {
+        //     this.fixArray.push('- You are missing Utility flask mastery, check and compare your tree');
+        // }
               
         const flaskIncEffect = data.toString().match(/Flasks applied to you have \d+% increased Effect/gm);
         if(flaskIncEffect!=null) {
@@ -326,7 +326,7 @@ export class PlayerData {
         
         let skeletonCount = 2;
 
-        let skeletonLevel = parseInt(this.skeletonGem.level);
+        const skeletonLevel = parseInt(this.skeletonGem.level);
 
         if(skeletonLevel > 10) {
             skeletonCount = 3;

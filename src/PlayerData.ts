@@ -43,6 +43,7 @@ export class PlayerData {
     totalLoopDamage = 0;
     frWard = "No/Bad";
     bodyLoopSpeed = "Fail";
+    totalWard = 0;
 
     playerClass  = "";
 
@@ -90,13 +91,36 @@ export class PlayerData {
             this.fixArray.push('- You are missing 30% Increased Global defenses Staff Mastery');
         }
 
-        if(this.playerStats['Ward'] > 2000) {
-            let multiplier = 2;
-            if(this.staffDefenseMastery === "Yes") {multiplier = 2.3;}
-            this.playerStats['Ward'] = (parseInt(this.playerStats['Ward'])  + 200 * multiplier) * 0.3;
-            this.playerStats['Ward'] = Math.floor(this.playerStats['Ward']);
-            // TODO -- Handle flask suffix increased ward, handle incrased effect of flasks
+        // handling ward ---------------------------------------------------------
+        const wardArray = data.toString().match(/Ward: \d\d\d/gm);
+
+        for(const item of wardArray!) {
+            this.totalWard = this.totalWard + parseInt( item.substring(6, 9) );
         }
+
+        let skin = false;
+        const loyal = data.toString().match(/Skin of the/gm);
+        if(loyal!=null) skin = true;
+
+ 
+        let multiplier = 1;
+        if(skin) multiplier = multiplier + 1;
+        if(this.staffDefenseMastery === "Yes") {multiplier = multiplier + 0.3;}
+
+        const flaskMultiArray = data.toString().match(/\d\d% increased Ward during Effect/gm);
+        let flaskMulti = 0;
+
+        if(flaskMultiArray!=null) {
+            for(const item of flaskMultiArray!) {
+                flaskMulti  = flaskMulti + parseInt(item.substring(0,2))/100;
+            }
+        }
+        multiplier = flaskMulti + multiplier;
+
+        this.playerStats['Ward'] = (this.totalWard + 200) * multiplier * 0.3;
+
+        // TODO -- Handle flask suffix increased ward, handle incrased effect of flasks
+        // ------------------------------------------------------------------------
 
         const ringCount = data.toString().match(/Heartbound Loop/gm);
 
@@ -105,6 +129,12 @@ export class PlayerData {
             this.loopRingsCount = 1;
         } else {
             this.loopRingsCount = 2;
+        }
+
+        const skeletonDamageArray = data.toString().match(/\d\d\d Physical Damage taken on Minion Death/gm);
+
+        for(const item of skeletonDamageArray!) {
+            this.skeletonDamage = this.skeletonDamage + parseInt( item.substring(0, 3) );
         }
 
         this.initLoopDamage(data.toString());
@@ -331,11 +361,11 @@ export class PlayerData {
             skeletonCount = 3;
         }
 
-        if(skeletonLevel >19 ) {
+        if(skeletonLevel >=19 ) {
             skeletonCount = 4;
         }
         
-        this.skeletonDamage = 420 * this.loopRingsCount * skeletonCount;
+        this.skeletonDamage = this.skeletonDamage * skeletonCount;
 
         this.frDamage = Math.floor((parseInt(this.playerStats['Life']) * 0.4  
                         + parseInt(this.playerStats['EnergyShield']) * 0.25) 
@@ -352,7 +382,8 @@ export class PlayerData {
         if(lords!=null) gemPlus = 2;
 
         const gLevel = parseInt(this.bodyCWDT.level) + gemPlus - 1;
-        
+        // 0 based array, so -1
+
         const cwdtArray = [ 528, 583, 661, 725, 812, 897, 1003, 1107, 1221, 1354, 1485, 1635, 1804, 1980, 2184, 2394, 2621, 2874, 3142, 3272, 3580, 3950, 4350 ];
         let threshold;
 
@@ -379,7 +410,7 @@ export class PlayerData {
         if(this.playerStats['Ward'] >= this.frDamage ) {
             this.frWard = "Yes/Good";
         } else {
-            this.fixArray.push('- Ward is less than FR damage, adjust Life and Chaos Res or remove Mind Over Matter, see https://returnx.github.io/cwdt/')
+            this.fixArray.push('  Ward is less than FR damage. Adjust Life and Chaos Res or remove Mind Over Matter, for details please see https://returnx.github.io/cwdt/')
         }
     }
 

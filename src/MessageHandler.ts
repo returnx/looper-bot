@@ -95,6 +95,12 @@ Swap Weapons - ${playerData.swapWandCount}
 ${finalMessage}
 \`\`\``
             this.sendMessage(message, finalMsg);
+        } else {
+            const finalMessage = 'Looks good. If build is not working, check your Pathenon and Gem Links';
+            const finalMsg = `\`\`\`diff
+            ${finalMessage}
+            \`\`\``
+            this.sendMessage(message, finalMsg);
         }
     }
 }

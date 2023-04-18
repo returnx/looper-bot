@@ -345,6 +345,16 @@ export class PlayerData {
             this.fixArray.push('- Your Timeless Jewel is not Balbala')
         }
 
+        if(!Number.isInteger(this.playerStats['Ward'])) {
+            this.playerStats['Ward'] = parseInt(this.playerStats['Ward']);
+        }
+
+        if(this.playerStats['Ward'] >= this.frDamage ) {
+            this.frWard = "Yes/Good";
+        } else {
+            this.fixArray.push('  Ward is less than FR damage. Adjust Life and Chaos Res or remove Mind Over Matter, for details please see https://returnx.github.io/cwdt/')
+        }
+        
         return Promise.resolve();
     }
 
@@ -401,16 +411,6 @@ export class PlayerData {
             this.bodyLoopSpeed = "Full Speed";
         } else {
             this.fixArray.push('- Your Loop is either half speed or fails, please use calculator to check https://returnx.github.io/cwdt/')
-        }
-
-        if(!Number.isInteger(this.playerStats['Ward'])) {
-            this.playerStats['Ward'] = parseInt(this.playerStats['Ward']);
-        }
-
-        if(this.playerStats['Ward'] >= this.frDamage ) {
-            this.frWard = "Yes/Good";
-        } else {
-            this.fixArray.push('  Ward is less than FR damage. Adjust Life and Chaos Res or remove Mind Over Matter, for details please see https://returnx.github.io/cwdt/')
         }
     }
 

@@ -1,6 +1,8 @@
 #### Before Build Install Copyfiles
 
+npm install
 npm install copyfiles -g
+npm run start
 
 ### Scripts
 

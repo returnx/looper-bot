@@ -29,7 +29,7 @@ Don't use too many skills in loop
 \`\`\``;
 
 const rareRing = `\`\`\` 
-How to Use Rare Ring In 3.20
+How to Use Rare Ring In 3.21
 
 This will require 3 divergent CWDTs 
 One for Body, One for Weapon and One for Helm.
@@ -79,8 +79,8 @@ Weapon - Divergent 21/20
 const upgrade = `\`\`\`
 How To Upgrade For More  Damage
 
-Min Maxed Pandamonious PoB - https://pobb.in/ScJ_COw__2E7
-Min Maxed Ashes PoB -  https://pobb.in/FcFukcjGRUVs
+Min Maxed Pandamonious PoB - https://pobb.in/hP8_OzkGNd6P
+Min Maxed Ashes PoB -  https://pobb.in/L7SaA2XyqP3f
 
 Upgrade In Any Order!
 

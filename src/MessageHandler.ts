@@ -96,10 +96,8 @@ ${finalMessage}
 \`\`\``
             this.sendMessage(message, finalMsg);
         } else {
-            const finalMessage = 'Looks good. If build is not working, check your Pathenon and Gem Links';
-            const finalMsg = `\`\`\`diff
-            ${finalMessage}
-            \`\`\``
+            const finalMessage = 'Looks good. If build is not working, check your Pantheon, Gem Levels, Gem Links. And to check flask uptime, use the following calculator https://returnx.github.io/cwdt/';
+            const finalMsg = `\`\`\`diff${finalMessage}\`\`\``
             this.sendMessage(message, finalMsg);
         }
     }

@@ -349,6 +349,11 @@ export class PlayerData {
             this.playerStats['Ward'] = parseInt(this.playerStats['Ward']);
         }
 
+        const vaalSummonSkeletons = data.toString().match(/Vaal Summon Skeletons/gm);
+        if(vaalSummonSkeletons!= null) {
+            this.fixArray.push('- Vaal Summon Skeletons bricks the build, use normal');
+        }
+
         if(this.playerStats['Ward'] >= this.frDamage ) {
             this.frWard = "Yes/Good";
         } else {
@@ -432,7 +437,7 @@ export class PlayerData {
             const slot = jsonData.PathOfBuilding.Skills[0].SkillSet[0].Skill[i];
             if(slot.Gem!=undefined) {
                 for(let i = 0; i <slot.Gem.length; i++) {
-                    if(slot.Gem[i].$.nameSpec === 'Summon Skeletons') {
+                    if(slot.Gem[i].$.nameSpec === 'Summon Skeletons' || slot.Gem[i].$.nameSpec === 'Vaal Summon Skeletons') {
                         this.setGemData(this.skeletonGem, slot.Gem[i].$, slot.$.slot );
     
                         for(let j = 0; j < slot.Gem.length; j++) {

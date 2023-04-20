@@ -47,6 +47,9 @@ export class PlayerData {
 
     playerClass  = "";
 
+    treeData : any;
+    pobString : any;
+
     fixArray : string[] = [];
 
     constructor(message : Message) {
@@ -85,7 +88,15 @@ export class PlayerData {
 
         await this.initlaizeGems(data);
 
-        if(data.toString().match(/28589/gm)!=null) {
+        this.pobString = data.toString();
+        this.treeData = this.pobString.match(/<Spec.*>/gm);
+        this.treeData = this.treeData[0];
+
+        if(this.bodyCWDT === undefined) {
+            this.fixArray.push("- CWDT Gem in body is missing, the bot cannot check");
+        }
+
+        if(this.treeData.match(/28589/gm)!=null) {
             this.staffDefenseMastery = "Yes";
         } else {
             this.fixArray.push('- You are missing 30% Increased Global defenses Staff Mastery');
@@ -146,19 +157,19 @@ export class PlayerData {
             this.totalDust = this.totalDust + parseInt( item.substring(0, 2) );
         }
 
-        if(data.toString().match(/21730/gm)!=null) {
+        if(this.treeData.match(/21730/gm)!=null) {
             this.lessDurationMastery = "Yes";
         }
 
         // Skeleton Duration
         let reducedDuration = 0;
-        if(data.toString().match(/52099/gm)!=null) {
+        if(this.treeData.match(/52099/gm)!=null) {
             reducedDuration = reducedDuration + 5;
         }
-        if(data.toString().match(/14090/gm)!=null) {
+        if(this.treeData.match(/14090/gm)!=null) {
             reducedDuration = reducedDuration + 5;
         }
-        if(data.toString().match(/4207/gm)!=null) {
+        if(this.treeData.match(/4207/gm)!=null) {
             reducedDuration = reducedDuration + 15;
         }
 
@@ -199,18 +210,17 @@ export class PlayerData {
         }
 
         // Mana recoup
-        const battleRouse = data.toString().match(/5289/gm);
+        const battleRouse = this.treeData.match(/5289/gm);
         if(battleRouse!=null) {
-
             this.manaRecoup = this.manaRecoup + 10;
-
-            const manaMastery = data.toString().match(/59064/gm);
-            if(manaMastery!=null) {
-                this.manaRecoup = this.manaRecoup + 10;
-            }
         }
 
-        const itemRecoup = data.toString().match(/\d[%] of Damage taken Recouped as Mana/gm);
+        const manaMastery = this.treeData.match(/59064/gm);
+        if(manaMastery!=null) {
+            this.manaRecoup = this.manaRecoup + 10;
+        }
+
+        const itemRecoup = this.pobString.match(/\d[%] of Damage taken Recouped as Mana/gm);
 
         if(itemRecoup!=null) {
             for(const item of itemRecoup!) {
@@ -218,18 +228,18 @@ export class PlayerData {
             }
         }
         
-        if(this.manaRecoup == 0) {
+        if(this.manaRecoup === 0) {
             this.fixArray.push('- You are missing Mana Recoup on tree/items')
         }
 
         // Life Recoup
-        if(data.toString().match(/37403/gm)!=null) {
+        if(this.treeData.match(/37403/gm)!=null) {
             this.lifeRecoup = this.lifeRecoup + 18;
         }
-        if(data.toString().match(/2474/gm)!=null) {
+        if(this.treeData.match(/2474/gm)!=null) {
             this.lifeRecoup = this.lifeRecoup + 6;
         }
-        if(data.toString().match(/55804/gm)!=null) {
+        if(this.treeData.match(/55804/gm)!=null) {
             this.lifeRecoup = this.lifeRecoup + 6;
         }
 
@@ -253,25 +263,21 @@ export class PlayerData {
 
         const cdrList = data.toString().match(/\d+% increased Cooldown Recovery Rate$/gm)
         if(cdrList!=null) {
-
             for(const cdrMod of cdrList) {
                 this.cdr = this.cdr + parseInt(cdrMod.substring(0, cdrMod.indexOf('%')));
             }
         }
+
+        const cryCDR = this.pobString.match(/Cry has \d+% increased Cooldown Recovery Rate/gm); 
+        if(cryCDR!=null) {
+            this.fixArray.push("Please remove Warcry boot implicit and try again");
+        }
     
-        if(data.toString().match(/34098/gm)!=null) {
+        if(this.treeData.match(/34098/gm)!=null) {
             this.MindOverMatter = "Yes";
         }
 
-        if(data.toString().match(/8281/gm)!=null) {
-            const lightOne = data.toString().match(/Adds \d+ to \d+ Lightning Damage( to Spells)?/gm);
-            const lightTwo = data.toString().match(/\d+ to \d+ Added Spell Lightning Damage (while holding a Shield|while wielding a Two Handed Weapon)/gm);
-            if(lightOne == null && lightTwo == null) {
-                this.fixArray.push('- Missing Lightning Damage to spells for Elementalist Ascendancy');
-            }
-        }
-
-        if(data.toString().match(/9327/gm)!=null) {
+        if(this.treeData.match(/9327/gm)!=null) {
             this.pathfinder = "Yes";
         }
 
@@ -292,7 +298,7 @@ export class PlayerData {
         const flaskIncEffect = data.toString().match(/Flasks applied to you have \d+% increased Effect/gm);
         if(flaskIncEffect!=null) {
             this.flaskIncEffect = "Yes"
-            this.fixArray.push('- Remove Increased Effect Of Flasks from items/tree, this reduces your Ward');
+            this.fixArray.push('- Remove Increased Effect Of Flasks from items or tree. this reduces your Ward');
         }
 
         const wandCheck = data.toString().match(/Spectral Spirits when Equipped/gm);
@@ -310,6 +316,14 @@ export class PlayerData {
             this.fixArray.push('- Minion Speed is not 20% quality');
         }
 
+        if(this.minionSpeed.qualityId != "Anomalous") {
+            this.fixArray.push('- Minion Speed is not Anomalous');
+        }
+
+        if(this.skeletonGem.qualityId != "Anomalous") {
+            this.fixArray.push('- Summon Skeleton is not Anomalous, are you going to use Blessed Rebirth Notable?');
+        }
+
         if(this.cdr < 9) {
             this.fixArray.push('- You are missing 9% cdr, craft on belt or boots');
             if(![34, 59].includes(this.totalDust) ) {
@@ -323,7 +337,7 @@ export class PlayerData {
             }
         }
 
-        if(this.cdr >= 27) {
+        if(this.cdr >= 27 && this.cdr < 52) {
             if(![34, 58].includes(this.totalDust) ) {
                 this.fixArray.push('- Your To Dust total must be total 34 with less duration mastery on tree or 58 and less duration gem without less duration on tree');
             }
@@ -333,6 +347,23 @@ export class PlayerData {
                     this.fixArray.push('- You need to allocate Less Duration Mastery on tree or use Less duration gem for 27% CDR');
                 }
             }
+        }
+
+        // 3.21 only, weapon gets 10% reduced skill duration
+        if(this.cdr >=52) {
+
+            if(![23, 48].includes(this.totalDust) ) {
+                if(this.minionSpeed.quality > 20) {
+                    this.fixArray.push("+ You are a smart one aren't you?");
+                } else {
+                    this.fixArray.push('- Your To Dust total must be total 23 + Window Of Opportunity + Less Duration 20/20 or 48 with Less Duration 20/20 for 52 CDR');
+                }
+            }
+
+            if(this.lessDurationMastery ===  "Yes") {
+                this.fixArray.push('- Less Duration Mastery is not required for 52% cdr, use a 20/20 Less Duration Gem with Summon Skeletons, see #check-list');
+            }
+
         }
 
         if(this.cdr < 27 && this.lessDurationMastery ===  "Yes") {
@@ -354,10 +385,33 @@ export class PlayerData {
             this.fixArray.push('- Vaal Summon Skeletons bricks the build, use normal');
         }
 
+        const buffsExpireSoon = this.pobString.match(/Buffs on you expire/gm);
+        if(buffsExpireSoon!=null) {
+            this.fixArray.push("- Weapon has crucible modifer buffs expire soon, this will break flask buffs");
+        }
+
+        if(this.loopRingsCount === 1) {
+            if(this.manaRecoup <= 20) {
+                this.fixArray.push("- Mana recoup is 20, you may need more recoup with signle Heartbound Loop Ring Setup");
+            }
+        }
+   
+        if(this.treeData.match(/8281/gm)!=null) {
+            const lightOne = data.toString().match(/Adds \d+ to \d+ Lightning Damage( to Spells)?/gm);
+            const lightTwo = data.toString().match(/\d+ to \d+ Added Spell Lightning Damage (while holding a Shield|while wielding a Two Handed Weapon)/gm);
+            if(lightOne == null && lightTwo == null) {
+                this.fixArray.push('- Missing Lightning Damage to spells for Elementalist Ascendancy');
+            }
+        }
+
         if(this.playerStats['Ward'] >= this.frDamage ) {
-            this.frWard = "Yes/Good";
+            this.frWard = "Yes - Good";
         } else {
-            this.fixArray.push('  Ward is less than FR damage. Adjust Life and Chaos Res or remove Mind Over Matter, for details please see https://returnx.github.io/cwdt/')
+            this.fixArray.push('- Ward is less than FR damage. Remove Mind Over Matter Keystone.');
+            if(this.frDamage - this.playerStats['Ward'] > 200) {
+                this.fixArray.push('- You are taking too much damage to your life pool from Forbidden Rite');
+            }
+            this.fixArray.push('- Increase Chaos Resistance or reduce life pool, Please see https://returnx.github.io/cwdt/');
         }
         
         return Promise.resolve();

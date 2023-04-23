@@ -21,9 +21,10 @@ The skill gems should not be first gem in weapon and body, put support gems firs
 
 Fifth,
 
-Get reduced cost of mana skills boots enchant
+Get reduced cost of mana skills boots enchant, also reduced mana cost on tree. Last Option.
 
 Sixth,
+
 Don't use too many skills in loop
 
 \`\`\``;

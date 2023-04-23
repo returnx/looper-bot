@@ -20,7 +20,8 @@ export class PlayerData {
     bodyCWDT : any = {};
     skeletonCWDT : any = {};
     frCWDT : any = {};
-    
+    lessDuration : any = {};
+
     // Item info
     physAsEle = "No";
     totalDust = 0;
@@ -44,6 +45,8 @@ export class PlayerData {
     frWard = "No/Bad";
     bodyLoopSpeed = "Fail";
     totalWard = 0;
+
+    crucibleWeaponReducedDuration = false;
 
     playerClass  = "";
 
@@ -173,6 +176,11 @@ export class PlayerData {
             reducedDuration = reducedDuration + 15;
         }
 
+        if(this.pobString.match(/{crucible}10% reduced Skill Effect Duration/)!=null) {
+            this.crucibleWeaponReducedDuration = true;
+            reducedDuration = reducedDuration + 10;
+        } 
+
         const reduction = (this.totalDust + reducedDuration + this.minionSpeed.quality*2)/100;
 
         let finalReduced = 20 * (1 - reduction);
@@ -192,13 +200,17 @@ export class PlayerData {
         if(finalReduced > 0.231) {
             this.skeletonDuration = finalReduced;
             if(this.skeletonDuration > 0.250) {
-                this.fixArray.push('- Check To Dusts or Minion Speed Quality');
+                this.fixArray.push('- Check To Dusts, Minion Speed Quality, reduced/increased duration of skills on tree and items');
             }
+        }
+
+        if(finalReduced > 0.165 &&  finalReduced < 0.198) {
+            this.skeletonDuration = 0.165;
         }
 
         if(finalReduced < 0.165) {
             this.skeletonDuration = finalReduced;
-            this.fixArray.push('- Check To Dusts and Reduced duration on tree');
+            this.fixArray.push('- Check To Dusts and Reduced/Increaed duration of skills on tree and items');
         }
 
         // Physical hits as elemental damage
@@ -338,26 +350,37 @@ export class PlayerData {
         }
 
         if(this.cdr >= 27 && this.cdr < 52) {
-            if(![34, 58].includes(this.totalDust) ) {
-                this.fixArray.push('- Your To Dust total must be total 34 with less duration mastery on tree or 58 and less duration gem without less duration on tree');
-            }
-
-            if(this.totalDust == 34 ) {
-                if(this.lessDurationMastery ===  "No") {
-                    this.fixArray.push('- You need to allocate Less Duration Mastery on tree or use Less duration gem for 27% CDR');
+            if(this.crucibleWeaponReducedDuration == true) {
+                if(this,finalReduced != 0.198) {
+                    this.fixArray.push('- Check To Dust, it should 24 with less duration mastery or 48 with less duration gem. For 52% cdr, you want 20/20 less duration gem with Summon Skeleton');
+                }
+            } else {
+                // because if you go with To Dusts only, then less duration can't be taken. Only Less duration gem
+                if(![34, 58].includes(this.totalDust) ) {
+                    this.fixArray.push('- Your To Dust total must be total 34 with less duration mastery on tree or 58 and less duration gem without less duration on tree');
+                }
+    
+                if(this.totalDust == 34 ) {
+                    if(this.lessDurationMastery ===  "No") {
+                        this.fixArray.push('- You need to allocate Less Duration Mastery on tree or use Less duration gem for 27% CDR');
+                    }
                 }
             }
+            
         }
 
         // 3.21 only, weapon gets 10% reduced skill duration
         if(this.cdr >=52) {
 
-            if(![23, 48].includes(this.totalDust) ) {
-                if(this.minionSpeed.quality > 20) {
-                    this.fixArray.push("+ You are a smart one aren't you?");
-                } else {
-                    this.fixArray.push('- Your To Dust total must be total 23 + Window Of Opportunity + Less Duration 20/20 or 48 with Less Duration 20/20 for 52 CDR');
-                }
+            // if(![23, 48].includes(this.totalDust) ) {
+            //     if(this.minionSpeed.quality > 20) {
+            //         this.fixArray.push("+ You are a smart one aren't you?");
+            //     } else {
+            //         this.fixArray.push('- Your To Dust total must be total 23 + Window Of Opportunity + Less Duration 20/20 or 48 with Less Duration 20/20 for 52 CDR');
+            //     }
+            // }
+            if(reduction!=98) {
+                this.fixArray.push('- Total Skeleton Reduction must be 98 with less duration gem');
             }
 
             if(this.lessDurationMastery ===  "Yes") {
@@ -408,8 +431,10 @@ export class PlayerData {
             this.frWard = "Yes - Good";
         } else {
             this.fixArray.push('- Ward is less than FR damage. Remove Mind Over Matter Keystone.');
-            if(this.frDamage - this.playerStats['Ward'] > 200) {
-                this.fixArray.push('- You are taking too much damage to your life pool from Forbidden Rite');
+            const damageExcess = this.frDamage - this.playerStats['Ward'];
+            if(damageExcess > 200) {
+
+                this.fixArray.push('- You are taking ' + damageExcess + ' damage to your life pool from Forbidden Rite');
             }
             this.fixArray.push('- Increase Chaos Resistance or reduce life pool, Please see https://returnx.github.io/cwdt/');
         }
@@ -491,6 +516,7 @@ export class PlayerData {
             const slot = jsonData.PathOfBuilding.Skills[0].SkillSet[0].Skill[i];
             if(slot.Gem!=undefined) {
                 for(let i = 0; i <slot.Gem.length; i++) {
+
                     if(slot.Gem[i].$.nameSpec === 'Summon Skeletons' || slot.Gem[i].$.nameSpec === 'Vaal Summon Skeletons') {
                         this.setGemData(this.skeletonGem, slot.Gem[i].$, slot.$.slot );
     
@@ -511,12 +537,19 @@ export class PlayerData {
                             }
                         }
                     }
+
                     if(slot.Gem[i].$.nameSpec === "Cast when Damage Taken") {
                         if(slot.$.slot === "Weapon 1") {
                             this.setGemData(this.weaponCWDT, slot.Gem[i].$, slot.$.slot );
                         }
                         if(slot.$.slot === "Body Armour") {
                             this.setGemData(this.bodyCWDT, slot.Gem[i].$, slot.$.slot );
+                        }
+                    }
+
+                    if(slot.Gem[i].$.nameSpec === "Less Duration") {
+                        if(slot.$.slot === "Weapon 1") {
+                            this.setGemData(this.lessDuration, slot.Gem[i].$, slot.$.slot );
                         }
                     }
                 }

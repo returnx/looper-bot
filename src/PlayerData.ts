@@ -189,10 +189,6 @@ export class PlayerData {
             finalReduced = finalReduced * 0.9;
         }
         
-        if(finalReduced<=0.198) {
-            this.skeletonDuration = 0.198;
-        }
-
         if(finalReduced > 0.198) {
             this.skeletonDuration = 0.231;
         }
@@ -204,8 +200,8 @@ export class PlayerData {
             }
         }
 
-        if(finalReduced > 0.165 &&  finalReduced < 0.198) {
-            this.skeletonDuration = 0.165;
+        if(finalReduced > 0.165 &&  finalReduced <= 0.198) {
+            this.skeletonDuration = 0.198;
         }
 
         if(finalReduced < 0.165) {

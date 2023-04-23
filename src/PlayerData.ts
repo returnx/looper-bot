@@ -347,7 +347,7 @@ export class PlayerData {
 
         if(this.cdr >= 27 && this.cdr < 52) {
             if(this.crucibleWeaponReducedDuration == true) {
-                if(finalReduced != 0.198) {
+                if(this.skeletonDuration != 0.198) {
                     this.fixArray.push('- Check To Dust, it should 24 with less duration mastery or 48 with less duration gem. For 52% cdr, you want 20/20 less duration gem with Summon Skeleton');
                 }
             } else {

@@ -131,4 +131,12 @@ help ring - Help to use rare ring
 help tanky - How to become tanky
 \`\`\``;
 
-export { mana, rareRing, upgrade, tanky, help}
+
+const cdr = `\`\`\`CDR breakpoints 
+
+9%  - 4.33 casts per second
+27% - 5.05 casts per second
+52% - 6.0 casts per second
+\`\`\``;
+
+export { mana, rareRing, upgrade, tanky, help, cdr}

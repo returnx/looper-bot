@@ -5,6 +5,7 @@ import * as cheerio from 'cheerio';
 import { Message } from 'discord.js';
 import * as zlib from 'node:zlib'
 import xml2js from 'xml2js';
+import { Recoup } from './Recoup';
 
 export class PlayerData { 
     readonly message : Message;
@@ -94,6 +95,9 @@ export class PlayerData {
         this.pobString = data.toString();
         this.treeData = this.pobString.match(/<Spec.*>/gm);
         this.treeData = this.treeData[0];
+
+        const recoup : Recoup = new Recoup();
+        recoup.recoup(this);
 
         if(this.bodyCWDT === undefined) {
             this.fixArray.push("- CWDT Gem in body is missing, the bot cannot check");
@@ -189,7 +193,17 @@ export class PlayerData {
             finalReduced = finalReduced * 0.9;
         }
         
-        if(finalReduced > 0.198) {
+        if(this.lessDuration!= undefined) {
+
+            let less = 39 + (parseInt(this.lessDuration.level) + 1) / 2
+            less = Math.floor(less);
+
+            less = less + Math.floor(parseInt(this.lessDuration.quality) * 0.5);
+
+            finalReduced = finalReduced * ( 1 - less/100);
+        }
+
+        if(finalReduced > 0.198 && finalReduced <= 0.231) {
             this.skeletonDuration = 0.231;
         }
 
@@ -204,9 +218,12 @@ export class PlayerData {
             this.skeletonDuration = 0.198;
         }
 
-        if(finalReduced < 0.165) {
-            this.skeletonDuration = finalReduced;
-            this.fixArray.push('- Check To Dusts and Reduced/Increaed duration of skills on tree and items');
+        if(finalReduced < 0.165 && finalReduced > 0.132) {
+            this.skeletonDuration = 0.165;
+        }
+
+        if(finalReduced < 0.132) {
+            this.fixArray.push('- Check To Dusts and Reduced/Increased duration of skills on tree and items');
         }
 
         // Physical hits as elemental damage
@@ -217,63 +234,16 @@ export class PlayerData {
             this.fixArray.push("- Remove Helm Implicit Phys as ele damage taken mod")
         }
 
-        // Mana recoup
-        const battleRouse = this.treeData.match(/5289/gm);
-        if(battleRouse!=null) {
-            this.manaRecoup = this.manaRecoup + 10;
-        }
-
-        const manaMastery = this.treeData.match(/59064/gm);
-        if(manaMastery!=null) {
-            this.manaRecoup = this.manaRecoup + 10;
-        }
-
-        const itemRecoup = this.pobString.match(/\d[%] of Damage taken Recouped as Mana/gm);
-
-        if(itemRecoup!=null) {
-            for(const item of itemRecoup!) {
-                this.manaRecoup = this.manaRecoup + parseInt( item.substring(0, 1));
-            }
-        }
-        
-        if(this.manaRecoup === 0) {
-            this.fixArray.push('- You are missing Mana Recoup on tree/items')
-        }
-
-        // Life Recoup
-        if(this.treeData.match(/37403/gm)!=null) {
-            this.lifeRecoup = this.lifeRecoup + 18;
-        }
-        if(this.treeData.match(/2474/gm)!=null) {
-            this.lifeRecoup = this.lifeRecoup + 6;
-        }
-        if(this.treeData.match(/55804/gm)!=null) {
-            this.lifeRecoup = this.lifeRecoup + 6;
-        }
-
-        const implicitRecoup = data.toString().match(/\d+[%] of Physical Damage taken Recouped as Life/gm);
-        if(implicitRecoup!=null) {
-            for(const item of implicitRecoup!) {
-                this.lifeRecoup = this.lifeRecoup + parseInt( item.substring(0, 2));
-            }
-        }
-
-        const itemLifeRecoup = data.toString().match(/\d+[%] of Damage taken Recouped as Life/gm)
-        if(itemLifeRecoup!=null) {
-            for(const item of itemLifeRecoup!) {
-                this.lifeRecoup = this.lifeRecoup + parseInt( item.substring(0, 2));
-            }
-        }        
-
-        if(this.lifeRecoup == 0) {
-            this.fixArray.push('- You are missing Life Recoup on tree/items')
-        }
-
         const cdrList = data.toString().match(/\d+% increased Cooldown Recovery Rate$/gm)
         if(cdrList!=null) {
             for(const cdrMod of cdrList) {
                 this.cdr = this.cdr + parseInt(cdrMod.substring(0, cdrMod.indexOf('%')));
             }
+        }
+
+        // Sabo CDR
+        if(this.treeData.match(/51462/)!=null) {
+            this.cdr = this.cdr + 30;
         }
 
         const cryCDR = this.pobString.match(/Cry has \d+% increased Cooldown Recovery Rate/gm); 
@@ -348,7 +318,7 @@ export class PlayerData {
         if(this.cdr >= 27 && this.cdr < 52) {
             if(this.crucibleWeaponReducedDuration == true) {
                 if(this.skeletonDuration != 0.198) {
-                    this.fixArray.push('- Check To Dust, it should 24 with less duration mastery or 48 with less duration gem. For 52% cdr, you want 20/20 less duration gem with Summon Skeleton');
+                    this.fixArray.push('- Check To Dust, it should 24 with less duration mastery or 48 with less duration gem. Because The Weapon has 10% reduced');
                 }
             } else {
                 // because if you go with To Dusts only, then less duration can't be taken. Only Less duration gem
@@ -375,14 +345,18 @@ export class PlayerData {
             //         this.fixArray.push('- Your To Dust total must be total 23 + Window Of Opportunity + Less Duration 20/20 or 48 with Less Duration 20/20 for 52 CDR');
             //     }
             // }
-            if(reduction!=98) {
-                this.fixArray.push('- Total Skeleton Reduction must be 98 with less duration gem');
+
+            if(reduction!=0.98) {
+                this.fixArray.push('- Total Skeleton Duration Reduction must be 98 with 20/20 Less duration gem. See #check-list');
+            }
+
+            if(this.skeletonDuration!=0.165) {
+                this.fixArray.push('- Less Duration 20/20 gem required for 52 CDR');
             }
 
             if(this.lessDurationMastery ===  "Yes") {
                 this.fixArray.push('- Less Duration Mastery is not required for 52% cdr, use a 20/20 Less Duration Gem with Summon Skeletons, see #check-list');
             }
-
         }
 
         if(this.cdr < 27 && this.lessDurationMastery ===  "Yes") {
@@ -426,7 +400,9 @@ export class PlayerData {
         if(this.playerStats['Ward'] >= this.frDamage ) {
             this.frWard = "Yes - Good";
         } else {
-            this.fixArray.push('- Ward is less than FR damage. Remove Mind Over Matter Keystone.');
+            if(this.MindOverMatter === "Yes") {
+                this.fixArray.push('- Ward is less than FR damage. Remove Mind Over Matter Keystone.');
+            }
             const damageExcess = this.frDamage - this.playerStats['Ward'];
             if(damageExcess > 200) {
 
@@ -544,9 +520,7 @@ export class PlayerData {
                     }
 
                     if(slot.Gem[i].$.nameSpec === "Less Duration") {
-                        if(slot.$.slot === "Weapon 1") {
-                            this.setGemData(this.lessDuration, slot.Gem[i].$, slot.$.slot );
-                        }
+                        this.setGemData(this.lessDuration, slot.Gem[i].$, slot.$.slot );
                     }
                 }
             }

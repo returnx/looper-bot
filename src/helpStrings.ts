@@ -122,13 +122,13 @@ See #check-list for Example PoBs
 
 \`\`\``;
 
-const help = `\`\`\` 
-Bot Commands
+const help = `\`\`\`yaml
+BOT COMMANDS
 
-help upgrade - Upgrade help
-help mana - Mana fix help
-help ring - Help to use rare ring
-help tanky - How to become tanky
+    help upgrade - Upgrade help
+    help mana - Mana fix help
+    help ring - Help to use rare ring
+    help tanky - How to become tanky
 \`\`\``;
 
 export { mana, rareRing, upgrade, tanky, help}

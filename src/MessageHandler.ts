@@ -1,6 +1,6 @@
 import { Client, Message, Channel, TextChannel } from 'discord.js';
 import { PlayerData } from './PlayerData';
-import {mana, rareRing, upgrade} from './helpStrings.js';
+import {help, mana, rareRing, upgrade} from './helpStrings.js';
 
 export class MessageHandler {
 
@@ -17,6 +17,14 @@ export class MessageHandler {
             if(message.content.includes("pastebin.com") || message.content.includes("pobb.in")) {
                 await this.handlePoB(message);
             }
+        }
+
+        if(message.content.match(/^help$/)) {
+            await this.sendMessage(message, help);
+        }
+
+        if(message.content.startsWith("help tanky")) {
+            await this.sendMessage(message, help);
         }
 
         if (message.content.startsWith("help mana") || message.content.startsWith("help multiple swaps") || message.content.startsWith("help swaps")) {

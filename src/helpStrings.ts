@@ -114,5 +114,21 @@ Omni tress are squishy, Omni Spell Suppress is good.
 Good luck! Don't be Afraid! Go Bold!
 \`\`\``;
 
+const tanky = `\`\`\`
+Spell Suppression, Progenesis, 3k life, 1200 Ward, Ailment immunity, Curse Immunity, Chaos Resistance
+Optional -  Attack Block, Evasion with Grace Aura
 
-export { mana, rareRing, upgrade}
+See #check-list for Example PoBs
+
+\`\`\``;
+
+const help = `\`\`\` 
+Bot Commands
+
+help upgrade - Upgrade help
+help mana - Mana fix help
+help ring - Help to use rare ring
+help tanky - How to become tanky
+\`\`\``;
+
+export { mana, rareRing, upgrade, tanky, help}

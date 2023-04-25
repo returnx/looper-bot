@@ -125,10 +125,13 @@ See #check-list for Example PoBs
 const help = `\`\`\`yaml
 -------BOT COMMANDS-------
 
-help upgrade - Upgrade help
-help mana - Mana fix help
-help ring - Help to use rare ring
-help tanky - How to become tanky
+Command         # What it does
+
+help upgrade    # Upgrade help
+help mana       # Mana fix help
+help ring       # Help to use rare ring
+help tanky      # How to become tanky
+help pob        # How to configure pob
 \`\`\``;
 
 
@@ -139,4 +142,11 @@ const cdr = `\`\`\`CDR breakpoints
 52% - 6.0 casts per second
 \`\`\``;
 
-export { mana, rareRing, upgrade, tanky, help, cdr}
+
+const pob = `\`\`\`How to configure POB
+
+https://discord.com/channels/852104066401173514/984054952324370442/1014854709623914598
+
+\`\`\``;
+
+export { mana, rareRing, upgrade, tanky, help, cdr, pob}

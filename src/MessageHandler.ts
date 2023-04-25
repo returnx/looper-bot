@@ -19,7 +19,7 @@ export class MessageHandler {
             }
         }
 
-        if(message.content.match(/^help$/)) {
+        if(message.content.match(/^help$/) || message.content.match(/help list/)) {
             await this.sendMessage(message, help);
         }
 
@@ -27,7 +27,7 @@ export class MessageHandler {
             await this.sendMessage(message, tanky);
         }
 
-        if (message.content.startsWith("help mana") || message.content.startsWith("help multiple swaps") || message.content.startsWith("help swaps")) {
+        if (message.content.startsWith("help mana"))  {
             await this.sendMessage(message, mana);
         }
 

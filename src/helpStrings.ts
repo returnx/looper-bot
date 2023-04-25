@@ -143,10 +143,6 @@ const cdr = `\`\`\`CDR breakpoints
 \`\`\``;
 
 
-const pob = `\`\`\`How to configure POB
-
-https://discord.com/channels/852104066401173514/984054952324370442/1014854709623914598
-
-\`\`\``;
+const pob = "Configure PoB -> Click Here -> https://discord.com/channels/852104066401173514/984054952324370442/1014854709623914598";
 
 export { mana, rareRing, upgrade, tanky, help, cdr, pob}

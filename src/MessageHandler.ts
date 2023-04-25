@@ -8,6 +8,7 @@ export class MessageHandler {
 
     constructor(client : Client) {
         this.client = client;
+        client.user?.setActivity('Type help in chat for commands');
     }
 
     async handleMessage(message: Message) {

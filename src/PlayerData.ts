@@ -431,6 +431,10 @@ export class PlayerData {
             skeletonCount = 4;
         }
         
+        if(this.treeData.match(/28535/)!=null) {
+            skeletonCount = skeletonCount * 2;
+        }
+
         this.skeletonDamage = this.skeletonDamage * skeletonCount;
 
         this.frDamage = Math.floor((parseInt(this.playerStats['Life']) * 0.4  

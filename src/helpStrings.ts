@@ -134,7 +134,7 @@ help tanky      # How to become tanky
 help pob        # How to configure pob
 
 \`\`\`
-Post Your PoB in #build-fix-bot
+Post Your PoB in https://discord.com/channels/852104066401173514/988474586490368110
 `;
 
 
@@ -142,7 +142,7 @@ const cdr = `\`\`\`CDR breakpoints
 
 9%  - 4.33 casts per second
 27% - 5.05 casts per second
-52% - 6.0 casts per second
+52% - 6.06 casts per second
 \`\`\``;
 
 

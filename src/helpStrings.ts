@@ -132,7 +132,10 @@ help mana       # Mana fix help
 help ring       # Help to use rare ring
 help tanky      # How to become tanky
 help pob        # How to configure pob
-\`\`\``;
+
+\`\`\`
+Post Your PoB in #build-fix-bot
+`;
 
 
 const cdr = `\`\`\`CDR breakpoints 

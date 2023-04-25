@@ -8,7 +8,10 @@ export class MessageHandler {
 
     constructor(client : Client) {
         this.client = client;
-        client.user?.setActivity('Type help in chat for commands');
+
+        client.on('ready', () => {
+           client.user?.setActivity('Type help in chat');
+        });
     }
 
     async handleMessage(message: Message) {

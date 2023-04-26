@@ -501,8 +501,8 @@ export class PlayerData {
                                 this.setGemData(this.skeletonCWDT, slot.Gem[j].$, slot.$.slot );
                             }
 
-                            if(slot.Gem[i].$.nameSpec === "Less Duration") {
-                                this.setGemData(this.lessDuration, slot.Gem[i].$, slot.$.slot );
+                            if(slot.Gem[j].$.nameSpec === "Less Duration") {
+                                this.setGemData(this.lessDuration, slot.Gem[j].$, slot.$.slot );
                             }
                         }
                     }

@@ -193,7 +193,7 @@ export class PlayerData {
             finalReduced = finalReduced * 0.9;
         }
         
-        if(this.lessDuration!= undefined) {
+        if(Object.keys(this.lessDuration).length != 0) {
 
             let less = 39 + (parseInt(this.lessDuration.level) + 1) / 2
             less = Math.floor(less);
@@ -500,6 +500,10 @@ export class PlayerData {
                             if(slot.Gem[j].$.nameSpec === 'Cast when Damage Taken') {
                                 this.setGemData(this.skeletonCWDT, slot.Gem[j].$, slot.$.slot );
                             }
+
+                            if(slot.Gem[i].$.nameSpec === "Less Duration") {
+                                this.setGemData(this.lessDuration, slot.Gem[i].$, slot.$.slot );
+                            }
                         }
                     }
                     if(slot.Gem[i].$.nameSpec === 'Minion Speed') {
@@ -521,10 +525,6 @@ export class PlayerData {
                         if(slot.$.slot === "Body Armour") {
                             this.setGemData(this.bodyCWDT, slot.Gem[i].$, slot.$.slot );
                         }
-                    }
-
-                    if(slot.Gem[i].$.nameSpec === "Less Duration") {
-                        this.setGemData(this.lessDuration, slot.Gem[i].$, slot.$.slot );
                     }
                 }
             }

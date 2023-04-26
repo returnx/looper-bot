@@ -6,6 +6,7 @@ import { Message } from 'discord.js';
 import * as zlib from 'node:zlib'
 import xml2js from 'xml2js';
 import { Recoup } from './Recoup';
+import { Validate } from './Validate';
 
 export class PlayerData { 
     readonly message : Message;
@@ -56,6 +57,9 @@ export class PlayerData {
 
     fixArray : string[] = [];
 
+    lords : RegExpMatchArray | null = null;
+    loyal : RegExpMatchArray | null = null;
+
     constructor(message : Message) {
         this.message = message; 
     }
@@ -96,8 +100,15 @@ export class PlayerData {
         this.treeData = this.pobString.match(/<Spec.*>/gm);
         this.treeData = this.treeData[0];
 
+        const valid = new Validate(this);
+        if(!valid.isValid()) return Promise.resolve();
+
         const recoup : Recoup = new Recoup();
         recoup.recoup(this);
+
+
+        this.loyal = data.toString().match(/Skin of the Loyal/gm);
+        this.lords = data.toString().match(/Skin of the Lords/gm);
 
         if(this.bodyCWDT === undefined) {
             this.fixArray.push("- CWDT Gem in body is missing, the bot cannot check");
@@ -155,7 +166,7 @@ export class PlayerData {
             this.skeletonDamage = this.skeletonDamage + parseInt( item.substring(0, 3) );
         }
 
-        this.initLoopDamage(data.toString());
+        this.initLoopDamage();
 
         // Skeleton Duration
         const toDustArray = data.toString().match(/\d\d[%] reduced Skeleton Duration/gm);
@@ -248,7 +259,7 @@ export class PlayerData {
 
         const cryCDR = this.pobString.match(/Cry has \d+% increased Cooldown Recovery Rate/gm); 
         if(cryCDR!=null) {
-            this.fixArray.push("Please remove Warcry boot implicit and try again");
+            this.fixArray.push("- Please remove Warcry boot implicit and try again");
         }
     
         if(this.treeData.match(/34098/gm)!=null) {
@@ -276,18 +287,23 @@ export class PlayerData {
         const flaskIncEffect = data.toString().match(/Flasks applied to you have \d+% increased Effect/gm);
         if(flaskIncEffect!=null) {
             this.flaskIncEffect = "Yes"
-            this.fixArray.push('- Remove Increased Effect Of Flasks from items or tree. this reduces your Ward');
+            this.fixArray.push('- Remove Increased Effect Of Flasks from items or tree. This reduces your Ward');
         }
 
         const wandCheck = data.toString().match(/Spectral Spirits when Equipped/gm);
         if(wandCheck != null) {
             this.swapWandCount = wandCheck.length;
+            if(this.skeletonCWDT.level >= 19 ) {
+                if(this.swapWandCount === 1) {
+                    this.fixArray.push('- Use 2 - Swap Wands with Essence of Insanity');
+                }
+            }
         } else {
-            this.fixArray.push('- You are missing Swap Wands, craft them using Essence of Insanity');
+            this.fixArray.push('- Missing Swap Wands, craft using Essence of Insanity');
         }
 
         if(this.playerStats['Armour'] !== '0') {
-            this.fixArray.push('- Your Armor is not 0, this must be 0');
+            this.fixArray.push('- Armor is not 0, this must be 0');
         }
 
         if(this.minionSpeed.quality < 20) {
@@ -303,7 +319,7 @@ export class PlayerData {
         }
 
         if(this.cdr < 9) {
-            this.fixArray.push('- You are missing 9% cdr, craft on belt or boots');
+            this.fixArray.push('- Missing 9% cdr, craft on belt or boots');
             if(![34, 59].includes(this.totalDust) ) {
                 this.fixArray.push('- For 9%-26% CDR, To Dust Total Reduced Skeleton Duration must be 34 + Window Of Opporutnity Notable or 59 Without Window Of Opportunity Notable. And Dont use Less Duration Mastery or Less Duration Gem.');
             }
@@ -318,17 +334,21 @@ export class PlayerData {
         if(this.cdr >= 27 && this.cdr < 52) {
             if(this.crucibleWeaponReducedDuration == true) {
                 if(this.skeletonDuration != 0.198) {
-                    this.fixArray.push('- Check To Dust, it should 24 with less duration mastery or 48 with less duration gem. Because The Weapon has 10% reduced');
+                    if(this.minionSpeed.quality > 20) {
+                        this.fixArray.push('- Check your Skeleton Cooldown and Skill Duration in PoB, there is something wrong.');
+                    } else {
+                        this.fixArray.push('- Check To Dust, it should be 24 with less duration mastery or 48 with 4/20 Less Duration gem. Because The Weapon has 10% reduced');
+                    }
                 }
             } else {
                 // because if you go with To Dusts only, then less duration can't be taken. Only Less duration gem
                 if(![34, 58].includes(this.totalDust) ) {
-                    this.fixArray.push('- Your To Dust total must be total 34 with less duration mastery on tree or 58 and less duration gem without less duration on tree');
+                    this.fixArray.push('- To Dust total must be total 34 with less duration mastery on tree or 58 and 4/20 Less Duration gem without less duration on tree');
                 }
     
                 if(this.totalDust == 34 ) {
                     if(this.lessDurationMastery ===  "No") {
-                        this.fixArray.push('- You need to allocate Less Duration Mastery on tree or use Less duration gem for 27% CDR');
+                        this.fixArray.push('- Allocate Less Duration Mastery on tree OR use 4/20 Less Duration gem for 27% CDR');
                     }
                 }
             }
@@ -347,7 +367,7 @@ export class PlayerData {
             // }
 
             if(reduction!=0.98) {
-                this.fixArray.push('- Total Skeleton Duration Reduction must be 98 with 20/20 Less duration gem. See #check-list');
+                this.fixArray.push('- Total Skeleton Duration Reduction must be 98 and also use 20/20 Less duration gem. See #check-list');
             }
 
             if(this.skeletonDuration!=0.165) {
@@ -414,7 +434,7 @@ export class PlayerData {
         return Promise.resolve();
     }
 
-    initLoopDamage(data : string) {
+    initLoopDamage() {
         // Math time now
 
         // const ringList = data.toString().match(/\d+ Physical Damage taken on Minion Death/);
@@ -445,11 +465,9 @@ export class PlayerData {
 
         let gemPlus = 0;
 
-        const loyal = data.toString().match(/Skin of the Loyal/gm);
-        if(loyal!=null) gemPlus = 1;
+        if(this.loyal!=null) gemPlus = 1;
 
-        const lords = data.toString().match(/Skin of the Lords/gm);
-        if(lords!=null) gemPlus = 2;
+        if(this.lords!=null) gemPlus = 2;
 
         const gLevel = parseInt(this.bodyCWDT.level) + gemPlus - 1;
         // 0 based array, so -1
@@ -470,6 +488,19 @@ export class PlayerData {
         if(this.totalLoopDamage >= threshold) {
             this.bodyLoopSpeed = "Full Speed";
         } else {
+
+            if(this.loyal!=null) {
+                if(this.bodyCWDT.level > 20) {
+                    this.fixArray.push('- CWDT for Skin of the Loyal should be level 20');
+                }
+            }
+    
+            if(this.lords!=null) {
+                if(this.bodyCWDT.level > 19) {
+                    this.fixArray.push('- CWDT for Skin of the Lords should be level 19. OR you should know what you are doing');
+                }
+            }
+
             this.fixArray.push('- Your Loop is either half speed or fails, please use calculator to check https://returnx.github.io/cwdt/')
         }
     }

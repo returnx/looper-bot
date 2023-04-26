@@ -42,16 +42,14 @@ Endgame - 1350
 Required Level 21 Summon Skeletons for 4 Skeletons - 4x420 
 
 Anomalous Minion Speed
-         Quality - 20%
-         Level - Does Not Matter
+        Quality - 20%
+        Level - Does Not Matter
 
 Anomalous Summon Skeletons
-         Quality - 3% or more
-          Level - 20  or 21
+        Quality - 3% or more
+        Level - 20/21
 
-Low Budget
-
-Option 1 - Best Option
+Option 1 - Low Budget
 
 Helm - Divergent CWDT 20/20 + Anomalous Summon Skeletons Level 20 + Empower 2 + Anomalous Minion Speed x/20
 Gloves - FR level 1 + Normal CWDT 12
@@ -66,7 +64,7 @@ Gloves - FR Level 1 + Normal CWDT 12
 Body - Divergent 19/20
 Weapon - Divergent 20/20
 
-End Game Omni
+End Game -- Ultimate Budget
 
 Option 3
 
@@ -90,7 +88,6 @@ Upgrade In Any Order!
     -- Awakened Support Gems
     -- Rare Jewels With Crit / Spell Damage -- Use the link in forum guide
     -- Divergent Righteous Fire, Phantasmal Sigil of Power
-    -- Amulet apply Turbulent Catalyst for Damage
     -- Ward items with High Resistance Suffix
     -- 4 Flask Upgrade Use Dying Sun 4th flask
     -- Weapon Harvest Enchant Quality For Elemental Damage
@@ -99,8 +96,9 @@ Upgrade In Any Order!
     -- Large cluster upgrade with 3 notables
     -- A Good Timeless Jewel
     -- Rare Ring Upgrade
-    -- 27% CDR
+    -- 27% CDR / 52% CDR
     -- Heartbound Rings With Better Corrupted Implicits
+    -- Ashes Of The Stars / +2 Rare Amulet with Crit Multi Suffix
     -- Helm Enchant Either RF or Ice Spear damage
     -- Boots Enchant Cold damage when hit
     -- Belt Lab Enchant
@@ -115,12 +113,13 @@ Good luck! Don't be Afraid! Go Bold!
 \`\`\``;
 
 const tanky = `\`\`\`
+Incorporte the following in your build
+
 Spell Suppression, Progenesis, 3k life, 1200 Ward, Ailment immunity, Curse Immunity, Chaos Resistance
 Optional -  Attack Block, Evasion with Grace Aura
 
-See #check-list for Example PoBs
-
-\`\`\``;
+\`\`\`
+See #example-pob`;
 
 const help = `\`\`\`yaml
 -------BOT COMMANDS-------

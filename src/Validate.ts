@@ -12,7 +12,7 @@ export class Validate {
         for(const str of stringArray) {
             const regex = new RegExp(str, "g");
             const count = this.player.pobString.match(regex);
-            if(count.length>1) {
+            if(count!=null && count.length>1) {
                 this.player.fixArray.push('- PoBs with unused items are not supported by the Bot, please import fresh and post');
                 return false;
             }

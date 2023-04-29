@@ -454,6 +454,7 @@ export class PlayerData {
             skeletonCount = 4;
         }
         
+        // Trigger bots sabo
         if(this.treeData.match(/28535/)!=null) {
             skeletonCount = skeletonCount * 2;
         }
@@ -509,6 +510,13 @@ export class PlayerData {
             if(this.lords!=null) {
                 if(this.bodyCWDT.level > 19) {
                     this.fixArray.push('- CWDT for Skin of the Lords should be level 19. OR you should know what you are doing');
+                }
+            }
+
+            if(this.loopRingsCount === 1) {
+                if(this.bodyCWDT.qualityId === "Normal" && this.treeData.match(/28535/) === null) {
+                    this.fixArray.push("- Body CWDT Quality Should be Divergent, are you sure it should be Normal?");
+                    this.fixArray.push("- For help on ring, type help ring in chat");
                 }
             }
               

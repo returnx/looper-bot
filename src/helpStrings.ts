@@ -23,12 +23,7 @@ Post Your PoB in https://discord.com/channels/852104066401173514/988474586490368
 `;
 
 
-const cdr = `\`\`\`CDR breakpoints 
-
-9%  - 4.33 casts per second
-27% - 5.05 casts per second
-52% - 6.06 casts per second
-\`\`\``;
+const cdr = "Help on CDR -> https://discord.com/channels/852104066401173514/984054952324370442/1015489910104403988";
 
 
 const pob = "Configure PoB -> Click Here -> https://discord.com/channels/852104066401173514/984054952324370442/1014854709623914598";

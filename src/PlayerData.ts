@@ -219,7 +219,7 @@ export class PlayerData {
         if(finalReduced > 0.231) {
             this.skeletonDuration = finalReduced;
             if(this.skeletonDuration > 0.250) {
-                this.fixArray.push('- Check To Dusts, Minion Speed Quality, reduced/increased duration of skills on tree and items');
+                this.fixArray.push('- Check To Dusts and Reduced/Increased duration of skills on passive tree and also items');
             }
         }
 
@@ -232,7 +232,7 @@ export class PlayerData {
         }
 
         if(finalReduced < 0.132) {
-            this.fixArray.push('- Check To Dusts and Reduced/Increased duration of skills on tree and items');
+            this.fixArray.push('- Check To Dusts and Reduced/Increased duration of skills on passive tree and also items');
         }
 
         // Physical hits as elemental damage
@@ -319,13 +319,13 @@ export class PlayerData {
         if(this.cdr < 9) {
             this.fixArray.push('- Missing 9% cdr, craft on belt or boots');
             if(![34, 59].includes(this.totalDust) ) {
-                this.fixArray.push('- For 9%-26% CDR, To Dust Total Reduced Skeleton Duration must be 34 + Window Of Opporutnity Notable or 59 Without Window Of Opportunity Notable');
+                this.fixArray.push('- For 9%-26% CDR, To Dust Total Reduced Skeleton Duration must be 34 + Window Of Opporutnity Notable OR 59 Without Window Of Opportunity Notable');
             }
         }
 
         if(this.cdr > 9 && this.cdr <27 ) {
             if(![34, 59].includes(this.totalDust) ) {
-                this.fixArray.push('- For 9%-26% CDR, To Dust Total Reduced Skeleton Duration must be 34 + Window Of Opporutnity Notable or 59 Without Window Of Opportunity Notable');
+                this.fixArray.push('- For 9%-26% CDR, To Dust Total Reduced Skeleton Duration must be 34 + Window Of Opporutnity Notable OR 59 Without Window Of Opportunity Notable');
             }
         }
 
@@ -609,7 +609,7 @@ export class PlayerData {
                 }
 
                 if(skeletonLevel < 21) {
-                    this.fixArray.push("- Summon Skeleton Gem Level is not 21")
+                    this.fixArray.push("- Summon Skeleton Gem Level is not 21, to learn more type in chat 'help ring'")
                 }
             }
         }

@@ -10,6 +10,7 @@
     "lint": "eslint . --ext .ts",
     "copy-files": "copyfiles -u 1 src/resources/* build/",
     "fast": "tsc && node build/index.js",
+    "debug" : "tsc",
     "prettier-format": "run-script-os",
     "prettier-format:win32": "prettier --config .prettierrc \"./src/**/*.ts\" --write",
     "prettier-format:darwin:linux": "prettier --config .prettierrc 'src/**/*.ts' --write",
@@ -49,6 +50,6 @@
     "cheerio": "^1.0.0-rc.12",
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
-    "xml2js": "^0.4.23"
+    "xml2js": "^0.5.0"
   }
 }

@@ -23,6 +23,7 @@ export class PlayerData {
     skeletonCWDT : any = {};
     frCWDT : any = {};
     lessDuration : any = {};
+    skeletonEmpower : any = {};
 
     // Item info
     physAsEle = "No";
@@ -109,10 +110,6 @@ export class PlayerData {
 
         this.loyal = data.toString().match(/Skin of the Loyal/gm);
         this.lords = data.toString().match(/Skin of the Lords/gm);
-
-        if(this.bodyCWDT === undefined) {
-            this.fixArray.push("- CWDT Gem in body is missing, the bot cannot check");
-        }
 
         if(this.treeData.match(/28589/gm)!=null) {
             this.staffDefenseMastery = "Yes";
@@ -418,6 +415,10 @@ export class PlayerData {
             }
         }
 
+        if(this.pobString.match(/Allocates Assassin if you have the matching/)) {
+            this.fixArray.push("Assassin Flesh/Flame breaks the build");
+        }
+
         if(this.playerStats['Ward'] >= this.frDamage ) {
             this.frWard = "Yes - Good";
         } else {
@@ -431,7 +432,8 @@ export class PlayerData {
             }
             this.fixArray.push('- Increase Chaos Resistance or reduce life pool, Please see https://returnx.github.io/cwdt/');
         }
-        
+
+        this.checkGemLinks();
         return Promise.resolve();
     }
 
@@ -486,6 +488,14 @@ export class PlayerData {
             threshold = threshold * (1 - this.bodyCWDT.quality/100);
         }
 
+        // checking if FR gem is required
+
+        if(this.skeletonDamage < threshold) {
+            if(Object.keys(this.forbiddenRite).length === 0) {
+                this.fixArray.push("- Forbidden Rite Gem is Missing");
+            }
+        }
+
         if(this.totalLoopDamage >= threshold) {
             this.bodyLoopSpeed = "Full Speed";
         } else {
@@ -501,7 +511,7 @@ export class PlayerData {
                     this.fixArray.push('- CWDT for Skin of the Lords should be level 19. OR you should know what you are doing');
                 }
             }
-
+              
             this.fixArray.push('- Loop is either half speed or fails, please use calculator to check https://returnx.github.io/cwdt/')
         }
     }
@@ -536,6 +546,10 @@ export class PlayerData {
                             if(slot.Gem[j].$.nameSpec === "Less Duration" && slot.Gem[j].$.enabled === "true") {
                                 this.setGemData(this.lessDuration, slot.Gem[j].$, slot.$.slot );
                             }
+
+                            if(slot.Gem[j].$.nameSpec === "Empower" && slot.Gem[j].$.enabled === "true") {
+                                this.setGemData(this.skeletonEmpower, slot.Gem[j].$, slot.$.slot );
+                            }
                         }
                     }
 
@@ -563,6 +577,41 @@ export class PlayerData {
                 }
             }
         }
+
+        if(Object.keys(this.skeletonGem).length === 0) {
+            this.fixArray.push('- Summon Skeletons is missing');
+        }
+
+        if(Object.keys(this.minionSpeed).length === 0) {
+            this.fixArray.push('- Minion Speed is missing');
+        }
+
+        if(Object.keys(this.bodyCWDT).length === 0) {
+            this.fixArray.push('- CWDT Gem in Body is missing, this is required for bot to check');
+        }
     }
 
+    checkGemLinks() {
+        if(this.loopRingsCount === 1) {
+            if(this.treeData.match(/28535/)===null) {
+
+                let skeletonLevel =  parseInt(this.skeletonGem.level);
+                
+                if(Object.keys(this.skeletonEmpower).length != 0) {
+                    if(parseInt(this.skeletonEmpower.level) === 2) 
+                        skeletonLevel = skeletonLevel + 1;
+                    if(parseInt(this.skeletonEmpower.level) > 2) 
+                        skeletonLevel = skeletonLevel + 2;
+                }
+
+                if(this.pobString.match(/\+1 to Level of all Skill Gems/)!=null) {
+                    skeletonLevel = skeletonLevel + 1 ;
+                }
+
+                if(skeletonLevel < 21) {
+                    this.fixArray.push("- Summon Skeleton Gem Level is not 21")
+                }
+            }
+        }
+    }
 }

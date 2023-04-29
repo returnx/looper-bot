@@ -61,7 +61,7 @@ export class PlayerData {
     loyal : RegExpMatchArray | null = null;
 
     constructor(message : Message) {
-        this.message = message; 
+        this.message = message;
     }
     
     setGemData(gem : any, gemData : any, slot: string) {
@@ -170,11 +170,12 @@ export class PlayerData {
 
         // Skeleton Duration
         const toDustArray = data.toString().match(/\d\d[%] reduced Skeleton Duration/gm);
-
-        for(const item of toDustArray!) {
-            this.totalDust = this.totalDust + parseInt( item.substring(0, 2) );
+        if(toDustArray!=null) {
+            for(const item of toDustArray!) {
+                this.totalDust = this.totalDust + parseInt( item.substring(0, 2) );
+            }    
         }
-
+        
         if(this.treeData.match(/21730/gm)!=null) {
             this.lessDurationMastery = "Yes";
         }
@@ -321,13 +322,13 @@ export class PlayerData {
         if(this.cdr < 9) {
             this.fixArray.push('- Missing 9% cdr, craft on belt or boots');
             if(![34, 59].includes(this.totalDust) ) {
-                this.fixArray.push('- For 9%-26% CDR, To Dust Total Reduced Skeleton Duration must be 34 + Window Of Opporutnity Notable or 59 Without Window Of Opportunity Notable. And Dont use Less Duration Mastery or Less Duration Gem.');
+                this.fixArray.push('- For 9%-26% CDR, To Dust Total Reduced Skeleton Duration must be 34 + Window Of Opporutnity Notable or 59 Without Window Of Opportunity Notable');
             }
         }
 
         if(this.cdr > 9 && this.cdr <27 ) {
             if(![34, 59].includes(this.totalDust) ) {
-                this.fixArray.push('- For 9%-26% CDR, To Dust Total Reduced Skeleton Duration must be 34 + Window Of Opporutnity Notable or 59 Without Window Of Opportunity Notable. And Dont use Less Duration Mastery or Less Duration Gem.');
+                this.fixArray.push('- For 9%-26% CDR, To Dust Total Reduced Skeleton Duration must be 34 + Window Of Opporutnity Notable or 59 Without Window Of Opportunity Notable');
             }
         }
 
@@ -405,7 +406,7 @@ export class PlayerData {
 
         if(this.loopRingsCount === 1) {
             if(this.manaRecoup <= 20) {
-                this.fixArray.push("- Mana recoup is 20, you may need more recoup with signle Heartbound Loop Ring Setup");
+                this.fixArray.push("- Mana recoup is 20, craft recoup on ring/amulet (If you have mana issues)");
             }
         }
    
@@ -501,7 +502,7 @@ export class PlayerData {
                 }
             }
 
-            this.fixArray.push('- Your Loop is either half speed or fails, please use calculator to check https://returnx.github.io/cwdt/')
+            this.fixArray.push('- Loop is either half speed or fails, please use calculator to check https://returnx.github.io/cwdt/')
         }
     }
 
@@ -532,14 +533,16 @@ export class PlayerData {
                                 this.setGemData(this.skeletonCWDT, slot.Gem[j].$, slot.$.slot );
                             }
 
-                            if(slot.Gem[j].$.nameSpec === "Less Duration") {
+                            if(slot.Gem[j].$.nameSpec === "Less Duration" && slot.Gem[j].$.enabled === "true") {
                                 this.setGemData(this.lessDuration, slot.Gem[j].$, slot.$.slot );
                             }
                         }
                     }
+
                     if(slot.Gem[i].$.nameSpec === 'Minion Speed') {
                         this.setGemData(this.minionSpeed, slot.Gem[i].$, slot.$.slot );
                     }
+
                     if(slot.Gem[i].$.nameSpec === "Forbidden Rite") {
                         this.setGemData(this.forbiddenRite, slot.Gem[i].$, slot.$.slot );
                         for(let j = 0; j < slot.Gem.length; j++) {

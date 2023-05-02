@@ -17,6 +17,7 @@ help ring       # Help to use rare ring
 help tanky      # How to become tanky
 help pob        # How to configure pob
 help cdr        # Help on CDR
+help shock      # Help on how to Shock and Generate Power Charges
 
 \`\`\`
 Post Your PoB in https://discord.com/channels/852104066401173514/988474586490368110
@@ -25,7 +26,8 @@ Post Your PoB in https://discord.com/channels/852104066401173514/988474586490368
 
 const cdr = "Help on CDR -> https://discord.com/channels/852104066401173514/984054952324370442/1015489910104403988";
 
+const shock = "Shock https://discord.com/channels/852104066401173514/984054952324370442/986105464372731915"
 
 const pob = "Configure PoB -> Click Here -> https://discord.com/channels/852104066401173514/984054952324370442/1014854709623914598";
 
-export { mana, rareRing, upgrade, tanky, help, cdr, pob}
+export { mana, rareRing, upgrade, tanky, help, cdr, pob, shock}

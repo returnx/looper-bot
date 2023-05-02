@@ -1,6 +1,6 @@
 import { Client, Message, Channel, TextChannel } from 'discord.js';
 import { PlayerData } from './PlayerData';
-import {cdr, help, mana, pob, rareRing, tanky, upgrade} from './helpStrings.js';
+import {cdr, help, mana, pob, rareRing, shock, tanky, upgrade} from './helpStrings.js';
 
 export class MessageHandler {
 
@@ -47,8 +47,12 @@ export class MessageHandler {
             await this.sendMessage(message, cdr);
         }
 
-        if (message.content.startsWith("help pob")) {
+        if (message.content.startsWith("help dps")) {
             await this.sendMessage(message, pob);
+        }
+
+        if (message.content.startsWith("help shock")) {
+            await this.sendMessage(message, shock);
         }
     }
 

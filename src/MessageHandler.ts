@@ -1,6 +1,6 @@
 import { Client, Message, Channel, TextChannel } from 'discord.js';
 import { PlayerData } from './PlayerData';
-import {cdr, help, mana, pob, rareRing, shock, tanky, upgrade} from './helpStrings.js';
+import {bubble, cdr, flask, help, mana, pob, rareRing, shock, tanky, upgrade} from './helpStrings.js';
 
 export class MessageHandler {
 
@@ -27,32 +27,40 @@ export class MessageHandler {
             await this.sendMessage(message, help);
         }
 
-        if(message.content.startsWith("help tanky")) {
+        if(message.content.match(/[Hh]elp tank/)) {
             await this.sendMessage(message, tanky);
         }
 
-        if (message.content.startsWith("help mana"))  {
+        if (message.content.match(/[Hh]elp mana/))  {
             await this.sendMessage(message, mana);
         }
 
-        if (message.content.startsWith("help rare") || message.content.startsWith("help ring")) {
+        if (message.content.match(/[Hh]elp rare/) || message.content.match(/[Hh]elp ring/)) {
             await this.sendMessage(message, rareRing);
         }
 
-        if (message.content.startsWith("help upgrade")) {
+        if (message.content.match(/[Hh]elp upgrade/)) {
             await this.sendMessage(message, upgrade);
         }
 
-        if (message.content.startsWith("help cdr")) {
+        if (message.content.match(/[Hh]elp cdr/)) {
             await this.sendMessage(message, cdr);
         }
 
-        if (message.content.startsWith("help dps")) {
+        if (message.content.match(/[Hh]elp dps/) || message.content.match(/[Hh]elp pob/)) {
             await this.sendMessage(message, pob);
         }
 
-        if (message.content.startsWith("help shock")) {
+        if (message.content.match(/[Hh]elp shock/)) {
             await this.sendMessage(message, shock);
+        }
+
+        if (message.content.match(/[Hh]elp bubble/)) {
+            await this.sendMessage(message, bubble);
+        }
+
+        if (message.content.match(/[Hh]elp flask/)) {
+            await this.sendMessage(message, flask);
         }
     }
 

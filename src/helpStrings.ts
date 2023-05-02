@@ -15,10 +15,11 @@ help upgrade    # Upgrade help
 help mana       # Mana fix help
 help ring       # Help to use rare ring
 help tanky      # How to become tanky
-help pob        # How to configure pob
+help dps        # How to configure pob for dps
 help cdr        # Help on CDR
 help shock      # Help on how to Shock and Generate Power Charges
-
+help bubble     # How to kill temporal bubble monsters
+help flask      # How to get 3/4 flasks working
 \`\`\`
 Post Your PoB in https://discord.com/channels/852104066401173514/988474586490368110
 `;
@@ -30,4 +31,8 @@ const shock = "Shock https://discord.com/channels/852104066401173514/98405495232
 
 const pob = "Configure PoB -> Click Here -> https://discord.com/channels/852104066401173514/984054952324370442/1014854709623914598";
 
-export { mana, rareRing, upgrade, tanky, help, cdr, pob, shock}
+const bubble = "Kill temporal bubble -> https://discord.com/channels/852104066401173514/984054952324370442/1102933916752543847";
+
+const flask = "Flask help -> https://discord.com/channels/852104066401173514/984054952324370442/1098302520524292096";
+
+export { mana, rareRing, upgrade, tanky, help, cdr, pob, shock, bubble, flask}

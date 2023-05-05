@@ -335,18 +335,19 @@ export class PlayerData {
                     if(this.minionSpeed.quality > 20) {
                         this.fixArray.push('- Check your Skeleton Cooldown and Skill Duration in PoB, there is something wrong.');
                     } else {
-                        this.fixArray.push('- Check To Dust, it should be 24 with less duration mastery or 48 with 4/20 Less Duration gem. Because The Weapon has 10% reduced');
+                        this.fixArray.push("- Check To Dust, it should be 24 with duration mastery '10% less' or 48 with 4/20 Less Duration gem. Because The Weapon has 10% reduced");
                     }
                 }
             } else {
                 // because if you go with To Dusts only, then less duration can't be taken. Only Less duration gem
                 if(![34, 58].includes(this.totalDust) ) {
-                    this.fixArray.push('- To Dust total must be total 34 with less duration mastery on tree or 58 and 4/20 Less Duration gem without less duration on tree');
+                    this.fixArray.push("- To Dust sum must be total 34 with duration mastery on tree '10% less skill effect duration'");
+                    this.fixArray.push("- OR Second Option To Dust sum must 58 and 4/20 Less Duration gem without less duration on tree");
                 }
     
                 if(this.totalDust == 34 ) {
                     if(this.lessDurationMastery ===  "No") {
-                        this.fixArray.push('- Allocate Less Duration Mastery on tree OR use 4/20 Less Duration gem for 27% CDR');
+                        this.fixArray.push("- Allocate Duration Mastery on tree '10% less skill effect duration' OR use 4/20 Less Duration gem for 27% CDR");
                     }
                 }
             }
@@ -396,10 +397,11 @@ export class PlayerData {
             this.fixArray.push('- Vaal Summon Skeletons bricks the build, use normal');
         }
 
-        const buffsExpireSoon = this.pobString.match(/Buffs on you expire/gm);
-        if(buffsExpireSoon!=null) {
-            this.fixArray.push("- Weapon has crucible modifer buffs expire soon, this will break flask buffs");
-        }
+        // Bug fixed
+        // const buffsExpireSoon = this.pobString.match(/Buffs on you expire/gm);
+        // if(buffsExpireSoon!=null) {
+        //     this.fixArray.push("- Weapon has crucible modifer buffs expire soon, this will break flask buffs");
+        // }
 
         if(this.loopRingsCount === 1) {
             if(this.manaRecoup <= 20) {

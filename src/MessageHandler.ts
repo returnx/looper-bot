@@ -85,31 +85,20 @@ export class MessageHandler {
         const messageString = 
 
             `\`\`\`----------------------PoB Check----------------------
-[Life: ${playerData.playerStats['Life']}]   [EnergyShield: ${playerData.playerStats['EnergyShield']}]   [Ward: ${playerData.playerStats['Ward']}]   [Mana: ${playerData.playerStats['Mana']}]   [ChaosResist: ${playerData.playerStats['ChaosResist']}]   [Armour: ${playerData.playerStats['Armour']}]
+[Life: ${playerData.playerStats['Life']}] [EnergyShield: ${playerData.playerStats['EnergyShield']}] [Mana: ${playerData.playerStats['Mana']}] [ChaosResist: ${playerData.playerStats['ChaosResist']}] [Armour: ${playerData.playerStats['Armour']}]
+
+[Cooldown - ${playerData.cdr}%] [Skeleton Duration - ${playerData.skeletonDuration}] [To Dusts - ${playerData.totalDust}] [Less Duration Mastery - ${playerData.lessDurationMastery}]
+
+[Ward: ${playerData.playerStats['Ward']}] [FR Damage - ${playerData.frDamage}] [Ward More Than FR Damage - ${playerData.frWard}]
+
+[Loop Rings - ${playerData.loopRings}] [MindOverMatter - ${playerData.MindOverMatter}] [Pathfinder - ${playerData.pathfinder}] [Staff Defense Mastery - ${playerData.staffDefenseMastery}]
+
+[Life Recoup - ${playerData.lifeRecoup}] [Mana Recoup - ${playerData.manaRecoup}] [Swap Weapons - ${playerData.swapWandCount}] [Flasks Increased Effect - ${playerData.flaskIncEffect}] [Physical Hits As Ele Damage - ${playerData.physAsEle}]
 
 Loop Status - ${playerData.bodyLoopSpeed}
 
-FR Damage - ${playerData.frDamage}
-Ward More Than FR Damage - ${playerData.frWard}
-
-Cooldown - ${playerData.cdr}%
-Skeleton Duration - ${playerData.skeletonDuration}
-To Dusts - ${playerData.totalDust}
-Less Duration Mastery - ${playerData.lessDurationMastery}
-
-Loop Rings - ${playerData.loopRings}
-
-MindOverMatter - ${playerData.MindOverMatter}
-Pathfinder - ${playerData.pathfinder}
-Staff Defense Mastery - ${playerData.staffDefenseMastery}
-
-[Life Recoup - ${playerData.lifeRecoup}] [Mana Recoup - ${playerData.manaRecoup}]
-
-Swap Weapons - ${playerData.swapWandCount}
-[Flasks Increased Effect - ${playerData.flaskIncEffect}] [Physical Hits As Ele Damage - ${playerData.physAsEle}]
-
 [Summon Skeletons  - ${playerData.skeletonGem.qualityId} ${playerData.skeletonGem.level}/${playerData.skeletonGem.quality}]  [Minion Speed     - ${playerData.minionSpeed.qualityId} ${playerData.minionSpeed.level}/${playerData.minionSpeed.quality}] [Skeleton CWDT    - ${playerData.skeletonCWDT.qualityId} ${playerData.skeletonCWDT.level}/${playerData.skeletonCWDT.quality}]
-[Forbidden Rite    - ${playerData.forbiddenRite.qualityId} ${playerData.forbiddenRite.level}/${playerData.forbiddenRite.quality}]       [FR CWDT          - ${playerData.frCWDT.qualityId} ${playerData.frCWDT.level}/${playerData.frCWDT.quality}]
+[Forbidden Rite    - ${playerData.forbiddenRite.qualityId} ${playerData.forbiddenRite.level}/${playerData.forbiddenRite.quality}]    [FR CWDT          - ${playerData.frCWDT.qualityId} ${playerData.frCWDT.level}/${playerData.frCWDT.quality}]
 [Body CWDT         - ${playerData.bodyCWDT.qualityId} ${playerData.bodyCWDT.level}/${playerData.bodyCWDT.quality}]  [Weapon CWDT      - ${playerData.weaponCWDT.qualityId} ${playerData.weaponCWDT.level}/${playerData.weaponCWDT.quality}]
 \`\`\``;
         this.sendMessage(message, messageString);
@@ -136,5 +125,7 @@ ${finalMessage}
 
             this.sendMessage(message, finalMsg);
         }
+
+        this.sendMessage(message,"```Support bot developement! Thank you! https://streamelements.com/forcearc-fd61d/tip```");
     }
 }

@@ -141,7 +141,17 @@ export class PlayerData {
                 flaskMulti  = flaskMulti + parseInt(item.substring(0,2))/100;
             }
         }
-        multiplier = flaskMulti + multiplier;
+        
+
+        // 3.22 Tattoos
+        let turtleMultiplier = 0;
+        const turtleArray = data.toString().match(/\d% increased Global Defences/gm);
+        if(turtleArray != null) {
+            turtleMultiplier = turtleArray.length * 3;
+            turtleMultiplier = turtleMultiplier /100;
+        }
+
+        multiplier = multiplier + flaskMulti + turtleMultiplier;
 
         this.playerStats['Ward'] = (this.totalWard + 200) * multiplier * 0.3;
 
@@ -285,7 +295,7 @@ export class PlayerData {
         const flaskIncEffect = data.toString().match(/Flasks applied to you have \d+% increased Effect/gm);
         if(flaskIncEffect!=null) {
             this.flaskIncEffect = "Yes"
-            this.fixArray.push('- Remove Increased Effect Of Flasks from items or tree. This reduces your Ward');
+            this.fixArray.push('- Remove Increased Effect Of Flasks from items, tree and tattoos. This reduces your Ward');
         }
 
         const wandCheck = data.toString().match(/Spectral Spirits when Equipped/gm);
@@ -422,7 +432,7 @@ export class PlayerData {
         }
 
         if(this.playerStats['Ward'] >= this.frDamage ) {
-            this.frWard = "Yes - Good";
+            this.frWard = "Yes/Good";
         } else {
             if(this.MindOverMatter === "Yes") {
                 this.fixArray.push('- Ward is less than FR damage. Remove Mind Over Matter Keystone.');
@@ -615,6 +625,10 @@ export class PlayerData {
                 }
 
                 if(this.pobString.match(/\+1 to Level of all Skill Gems/)!=null) {
+                    skeletonLevel = skeletonLevel + 1 ;
+                }
+
+                if(this.pobString.match(/\+1 to Level of all Intelligence Skill Gems/)!=null) {
                     skeletonLevel = skeletonLevel + 1 ;
                 }
 

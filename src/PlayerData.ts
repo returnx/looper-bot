@@ -323,7 +323,9 @@ export class PlayerData {
         }
 
         if(this.skeletonGem.qualityId != "Anomalous") {
-            this.fixArray.push('- Summon Skeleton is not Anomalous, are you going to use Blessed Rebirth Notable?');
+            if(data.toString().match(/Blessed Rebirth/) == null) {
+                this.fixArray.push('- Summon Skeleton is not Anomalous, are you going to use Blessed Rebirth Notable?'); 
+            }
         }
 
         if(this.cdr < 9) {

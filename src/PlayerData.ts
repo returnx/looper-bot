@@ -439,14 +439,12 @@ export class PlayerData {
             this.frWard = "Yes/Good";
         } else {
             if(this.MindOverMatter === "Yes") {
-                this.fixArray.push('- Ward is less than FR damage. Remove Mind Over Matter Keystone.');
+                this.fixArray.push('- Ward is less than FR damage. Remove Mind Over Matter Keystone if loop needs many swaps to start.');
             }
             const damageExcess = this.frDamage - this.playerStats['Ward'];
-            if(damageExcess > 200) {
-
-                this.fixArray.push('- You are taking ' + damageExcess + ' damage to your life pool from Forbidden Rite');
-            }
-            this.fixArray.push('- Increase Chaos Resistance or reduce life pool, Please see https://returnx.github.io/cwdt/');
+            this.fixArray.push('- You are taking ' + damageExcess + ' damage to your life pool from Forbidden Rite');
+            
+            this.fixArray.push('- Increase Chaos Resistance or increase ward or reduce life pool, Please see https://returnx.github.io/cwdt/');
         }
 
         return Promise.resolve();
@@ -491,7 +489,7 @@ export class PlayerData {
         let gLevel = parseInt(this.bodyCWDT.level) + gemPlus;
         
 
-        if(this.skeletonGemLevel > gLevel) {
+        if(this.skeletonGemLevel > gLevel || parseInt(this.skeletonCWDT.level) > gLevel) {
             gLevel = parseInt(this.skeletonCWDT.level);
         }
 

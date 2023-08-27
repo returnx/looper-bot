@@ -65,9 +65,15 @@ export class MessageHandler {
     }
 
     async sendMessage(message: Message, helpStr: string) {
-        const channel : Channel | null = await this.client.channels.fetch(message.channelId);
-        (channel as TextChannel).send(helpStr);
-        return Promise.resolve();
+        
+        try {
+            const channel : Channel | null = await this.client.channels.fetch(message.channelId);
+            (channel as TextChannel).send(helpStr);
+            return Promise.resolve();
+        }
+        catch(err) {
+            console.log("Failed to send message to discord");
+        }
     }
 
     async handlePoB(message: Message) {
@@ -78,7 +84,7 @@ export class MessageHandler {
         }
         catch(err) {
             console.log("This has failed " + message.content);
-            this.sendMessage(message, "Something has failed here, check for 404 or Check PoB Manually!");
+            this.sendMessage(message, "ERROR - The PoB is an invalid CWDT build or the URL is 404");
             return Promise.resolve(false);
         }
 

@@ -48,6 +48,7 @@ export class PlayerData {
     frWard = "No/Bad";
     bodyLoopSpeed = "Fail";
     totalWard = 0;
+    skeletonGemLevel = 0;
 
     crucibleWeaponReducedDuration = false;
 
@@ -173,7 +174,8 @@ export class PlayerData {
             this.skeletonDamage = this.skeletonDamage + parseInt( item.substring(0, 3) );
         }
 
-        this.initLoopDamage();
+        this.checkGemLinks();
+        this.initLoopDamage(data);
 
         // Skeleton Duration
         const toDustArray = data.toString().match(/\d\d[%] reduced Skeleton Duration/gm);
@@ -447,11 +449,10 @@ export class PlayerData {
             this.fixArray.push('- Increase Chaos Resistance or reduce life pool, Please see https://returnx.github.io/cwdt/');
         }
 
-        this.checkGemLinks();
         return Promise.resolve();
     }
 
-    initLoopDamage() {
+    initLoopDamage(data : Buffer) {
         // Math time now
 
         // const ringList = data.toString().match(/\d+ Physical Damage taken on Minion Death/);
@@ -487,14 +488,19 @@ export class PlayerData {
 
         if(this.lords!=null) gemPlus = 2;
 
-        const gLevel = parseInt(this.bodyCWDT.level) + gemPlus - 1;
-        // 0 based array, so -1
+        let gLevel = parseInt(this.bodyCWDT.level) + gemPlus;
+        
+
+        if(this.skeletonGemLevel > gLevel) {
+            gLevel = parseInt(this.skeletonCWDT.level);
+        }
 
         const cwdtArray = [ 528, 583, 661, 725, 812, 897, 1003, 1107, 1221, 1354, 1485, 1635, 1804, 1980, 2184, 2394, 2621, 2874, 3142, 3272, 3580, 3950, 4350 ];
         let threshold;
-
+        
         if(gLevel <24) {
-            threshold= cwdtArray[gLevel];
+            // 0 based array, so -1
+            threshold= cwdtArray[gLevel - 1];
         } else {
             threshold = 9999;
         }
@@ -507,7 +513,9 @@ export class PlayerData {
 
         if(this.skeletonDamage < threshold) {
             if(Object.keys(this.forbiddenRite).length === 0) {
-                this.fixArray.push("- Forbidden Rite Gem is Missing");
+                if(data.toString().match(/ascendClassName="Saboteur"/) == null) {
+                    this.fixArray.push("- Forbidden Rite Gem is Missing, this is required for the bot to check if build works");
+                }
             }
         }
 
@@ -529,12 +537,14 @@ export class PlayerData {
 
             if(this.loopRingsCount === 1) {
                 if(this.bodyCWDT.qualityId === "Normal" && this.treeData.match(/28535/) === null) {
-                    this.fixArray.push("- Body CWDT Quality Should be Divergent, are you sure it should be Normal?");
-                    this.fixArray.push("- For help on ring, type help ring in chat");
+                    this.fixArray.push("- Body CWDT Quality Should be Divergent when using only one heartbound ring");
+                    this.fixArray.push("- Type help ring in chat and learn how to use only one heartbound ring");
                 }
             }
               
-            this.fixArray.push('- Loop is either half speed or fails, please use calculator to check https://returnx.github.io/cwdt/')
+            this.fixArray.push('- Loop is either half speed or fails, please use calculator to check https://returnx.github.io/cwdt/');
+            this.fixArray.push('- Required Self damage to loop: ' + threshold);
+            this.fixArray.push('- Your Loop Self Damage:        ' + this.totalLoopDamage);
         }
     }
 
@@ -614,26 +624,28 @@ export class PlayerData {
     }
 
     checkGemLinks() {
+
+        let skeletonLevel =  parseInt(this.skeletonGem.level);
+                
+        if(Object.keys(this.skeletonEmpower).length != 0) {
+            if(parseInt(this.skeletonEmpower.level) === 2) 
+                skeletonLevel = skeletonLevel + 1;
+            if(parseInt(this.skeletonEmpower.level) > 2) 
+                skeletonLevel = skeletonLevel + 2;
+        }
+
+        if(this.pobString.match(/\+1 to Level of all Skill Gems/)!=null) {
+            skeletonLevel = skeletonLevel + 1 ;
+        }
+
+        if(this.pobString.match(/\+1 to Level of all Intelligence Skill Gems/)!=null) {
+            skeletonLevel = skeletonLevel + 1 ;
+        }
+
+        this.skeletonGemLevel = skeletonLevel;
+        // Sabo check
         if(this.loopRingsCount === 1) {
             if(this.treeData.match(/28535/)===null) {
-
-                let skeletonLevel =  parseInt(this.skeletonGem.level);
-                
-                if(Object.keys(this.skeletonEmpower).length != 0) {
-                    if(parseInt(this.skeletonEmpower.level) === 2) 
-                        skeletonLevel = skeletonLevel + 1;
-                    if(parseInt(this.skeletonEmpower.level) > 2) 
-                        skeletonLevel = skeletonLevel + 2;
-                }
-
-                if(this.pobString.match(/\+1 to Level of all Skill Gems/)!=null) {
-                    skeletonLevel = skeletonLevel + 1 ;
-                }
-
-                if(this.pobString.match(/\+1 to Level of all Intelligence Skill Gems/)!=null) {
-                    skeletonLevel = skeletonLevel + 1 ;
-                }
-
                 if(skeletonLevel < 21) {
                     this.fixArray.push("- Summon Skeleton Gem Level is not 21, to learn more type in chat 'help ring'")
                 }

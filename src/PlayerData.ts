@@ -24,6 +24,7 @@ export class PlayerData {
     frCWDT : any = {};
     lessDuration : any = {};
     skeletonEmpower : any = {};
+    frLinkedToSkeleton = false;
 
     // Item info
     physAsEle = "No";
@@ -411,12 +412,6 @@ export class PlayerData {
             this.fixArray.push('- Vaal Summon Skeletons bricks the build, use normal');
         }
 
-        // Bug fixed
-        // const buffsExpireSoon = this.pobString.match(/Buffs on you expire/gm);
-        // if(buffsExpireSoon!=null) {
-        //     this.fixArray.push("- Weapon has crucible modifer buffs expire soon, this will break flask buffs");
-        // }
-
         if(this.loopRingsCount === 1) {
             if(this.manaRecoup <= 20) {
                 this.fixArray.push("- Mana recoup is 20, craft recoup on ring/amulet (If you have mana issues)");
@@ -427,7 +422,9 @@ export class PlayerData {
             const lightOne = data.toString().match(/Adds \d+ to \d+ Lightning Damage( to Spells)?/gm);
             const lightTwo = data.toString().match(/\d+ to \d+ Added Spell Lightning Damage (while holding a Shield|while wielding a Two Handed Weapon)/gm);
             if(lightOne == null && lightTwo == null) {
-                this.fixArray.push('- Missing Added Lightning Damage to Spells to trigger Elementalist Shock, get this on Helm Implicit or Ring or Abyss jewel or Tattoo of the Valako Warrior');
+                this.fixArray.push('- Missing Added Lightning Damage to Spells to trigger Elementalist Shock, you are missing damage');
+                this.fixArray.push('- Get Added Lightning Damage on Helm Implicit or Ring or Abyss jewel or Tattoo of the Valako Warrior');
+                
             }
         }
 
@@ -443,8 +440,10 @@ export class PlayerData {
             }
             const damageExcess = this.frDamage - this.playerStats['Ward'];
             this.fixArray.push('- You are taking ' + damageExcess + ' damage to your life pool from Forbidden Rite');
-            
             this.fixArray.push('- Increase Chaos Resistance or increase ward or reduce life pool, Please see https://returnx.github.io/cwdt/');
+            if(this.frDamage < 200) {
+                this.fixArray.push('- You can ignore this damage to life pool if FR does not kill you');
+            }
         }
 
         return Promise.resolve();
@@ -486,13 +485,8 @@ export class PlayerData {
 
         if(this.lords!=null) gemPlus = 2;
 
-        let gLevel = parseInt(this.bodyCWDT.level) + gemPlus;
-        
-
-        if(this.skeletonGemLevel > gLevel || parseInt(this.skeletonCWDT.level) > gLevel) {
-            gLevel = parseInt(this.skeletonCWDT.level);
-        }
-
+        const gLevel = parseInt(this.bodyCWDT.level) + gemPlus;
+      
         const cwdtArray = [ 528, 583, 661, 725, 812, 897, 1003, 1107, 1221, 1354, 1485, 1635, 1804, 1980, 2184, 2394, 2621, 2874, 3142, 3272, 3580, 3950, 4350 ];
         let threshold;
         
@@ -507,6 +501,18 @@ export class PlayerData {
             threshold = threshold * (1 - this.bodyCWDT.quality/100);
         }
 
+        // Case where skeleton threshold is less body threshold, happens with level 21 skeletons
+
+        let skeletonThreshold = cwdtArray[parseInt(this.skeletonCWDT.level)-1];
+        if(this.skeletonCWDT.qualityId === "Divergent") {
+            skeletonThreshold = skeletonThreshold * (1 - this.skeletonCWDT.quality/100);
+        }
+
+        if(skeletonThreshold > this.skeletonDamage + this.frDamage) {
+            this.fixArray.push('- Not Enough Forbidden Rite damage to trigger Summon Skeletons, Loop Fails');
+        }
+
+        
         // checking if FR gem is required
 
         if(this.skeletonDamage < threshold) {
@@ -579,6 +585,10 @@ export class PlayerData {
 
                             if(slot.Gem[j].$.nameSpec === "Empower" && slot.Gem[j].$.enabled === "true") {
                                 this.setGemData(this.skeletonEmpower, slot.Gem[j].$, slot.$.slot );
+                            }
+
+                            if(slot.Gem[j].$.nameSpec === "Forbidden Rite" && slot.Gem[j].$.enabled === "true") {
+                                this.frLinkedToSkeleton = true;
                             }
                         }
                     }

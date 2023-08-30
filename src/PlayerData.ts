@@ -147,7 +147,7 @@ export class PlayerData {
 
         // 3.22 Tattoos
         let turtleMultiplier = 0;
-        const turtleArray = data.toString().match(/\d% increased Global Defences/gm);
+        const turtleArray = data.toString().match(/3% increased Global Defences/gm);
         if(turtleArray != null) {
             turtleMultiplier = turtleArray.length * 3;
             turtleMultiplier = turtleMultiplier /100;

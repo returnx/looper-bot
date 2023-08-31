@@ -327,7 +327,7 @@ export class PlayerData {
 
         if(this.skeletonGem.qualityId != "Anomalous") {
             if(data.toString().match(/Blessed Rebirth/) == null) {
-                this.fixArray.push('- Summon Skeleton is not Anomalous, are you going to use Blessed Rebirth Notable?'); 
+                this.fixArray.push('- Summon Skeleton is not Anomalous, either buy Anomalous or Use Blessed Rebirth notable cluster jewel'); 
             }
         }
 
@@ -512,7 +512,47 @@ export class PlayerData {
             this.fixArray.push('- Not Enough Forbidden Rite damage to trigger Summon Skeletons, Loop Fails');
         }
 
-        
+
+        if(this.frLinkedToSkeleton && this.loopRingsCount == 2 && this.skeletonGemLevel <= 20 && this.loyal!=null) {
+            if(skeletonLevel>11 || parseInt(this.skeletonCWDT.level) > 5) {
+                this.fixArray.push('- Please follow the gem links given below for fast optimal loop');
+                this.fixArray.push('- Summon Skeleton Level 11 in helm');
+                this.fixArray.push('- CWDT Level 5 in helm');
+                this.fixArray.push('- Forbddein Rite Level 1 in helm');
+                this.fixArray.push('- Anoamlous Minion Speed 20% quality helm');
+            }
+        }
+
+        if(this.frLinkedToSkeleton && this.skeletonGemLevel >= 21) {
+            this.fixArray.push("- Forbidden Rite Should be linked to CWDT in gloves/boots");
+            this.fixArray.push("- Forbidden Rite Should not be linked with Summon Skeletons");
+        }
+
+        if(this.frLinkedToSkeleton && this.skeletonGemLevel == 20 && this.loyal == null) {
+            this.fixArray.push("- Forbidden Rite Should be linked to CWDT in gloves/boots");
+            this.fixArray.push("- Forbidden Rite Should not be linked with Summon Skeletons");
+            this.fixArray.push("- Make Summon Skeleton Level 21, using Empower Support or +1 Amulet");
+        }
+
+        const cwdtLevelArray = [38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 65, 66, 67, 68, 69, 70, 72, 72, 72];
+        const skeletonLevelArray = [10, 13, 17, 21, 25, 29, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63, 66, 68, 70, 72];
+        const frLevelArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
+
+        const skelRequirement = skeletonLevelArray[skeletonLevel-1];
+        const skelCWDTSupportMax = cwdtLevelArray[parseInt(this.skeletonCWDT.level)-1];
+
+        const frLevelRequirement = frLevelArray[parseInt(this.forbiddenRite.level)-1];
+        const frLevelSupportMax = cwdtLevelArray[parseInt(this.frCWDT.level)-1];
+
+        if(skelRequirement > skelCWDTSupportMax) {
+            this.fixArray.push('- Skeleton & CWDT gem levels requirements dont match');
+            this.fixArray.push('- Please use the correct Skeleton and CWDT gem levels');
+        }
+
+        if(frLevelRequirement > frLevelSupportMax) {
+            this.fixArray.push('- Reduce Forbidden Rite Gem Level');
+        }
+
         // checking if FR gem is required
 
         if(this.skeletonDamage < threshold) {

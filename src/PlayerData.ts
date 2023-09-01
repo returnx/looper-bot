@@ -99,9 +99,14 @@ export class PlayerData {
 
         await this.initlaizeGems(data);
 
+        const jsonData = await xml2js.parseStringPromise(data);
+        const treeNumber = parseInt(jsonData.PathOfBuilding.Tree[0].$.activeSpec);
+        const activeTree = jsonData.PathOfBuilding.Tree[0].Spec[treeNumber-1];
+        this.treeData = JSON.stringify(activeTree,null, 2);
+
         this.pobString = data.toString();
-        this.treeData = this.pobString.match(/<Spec.*>/gm);
-        this.treeData = this.treeData[0];
+        // this.treeData = this.pobString.match(/<Spec.*>/gm);
+        // this.treeData = this.treeData[0];
 
         const valid = new Validate(this);
         if(!valid.isValid()) return Promise.resolve();

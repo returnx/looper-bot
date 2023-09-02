@@ -23,7 +23,11 @@ export class Recoup {
         }
         
         if(playerData.manaRecoup === 0) {
-            playerData.fixArray.push('- You are missing Mana Recoup on tree/items')
+            playerData.fixArray.push('- You are missing Mana Recoup on tree/items');
+        }
+
+        if(playerData.manaRecoup < 20) {
+            playerData.fixArray.push('- You want 20 or more Mana Recoup, check your tree & items');
         }
 
         // Life Recoup

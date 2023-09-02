@@ -441,7 +441,7 @@ export class PlayerData {
             this.frWard = "Yes/Good";
         } else {
             if(this.MindOverMatter === "Yes") {
-                this.fixArray.push('- Ward is less than FR damage. Remove Mind Over Matter Keystone if loop needs many swaps to start.');
+                this.fixArray.push('- Ward is less than FR damage. Remove Mind Over Matter Keystone only if loop needs many swaps to start.');
             }
             const damageExcess = this.frDamage - this.playerStats['Ward'];
             this.fixArray.push('- You are taking ' + damageExcess + ' damage to your life pool from Forbidden Rite');

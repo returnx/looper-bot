@@ -7,6 +7,7 @@ import * as zlib from 'node:zlib'
 import xml2js from 'xml2js';
 import { Recoup } from './Recoup';
 import { Validate } from './Validate';
+import { ItemManager } from './ItemManager';
 
 export class PlayerData { 
     readonly message : Message;
@@ -57,11 +58,16 @@ export class PlayerData {
 
     treeData : any;
     pobString : any;
+    pobJson : any;
+    activeTree : any;
 
     fixArray : string[] = [];
 
     lords : RegExpMatchArray | null = null;
     loyal : RegExpMatchArray | null = null;
+    
+    itemManager : ItemManager | null = null;
+    itemString  = "";
 
     constructor(message : Message) {
         this.message = message;
@@ -100,9 +106,11 @@ export class PlayerData {
         await this.initlaizeGems(data);
 
         const jsonData = await xml2js.parseStringPromise(data);
+        this.pobJson = jsonData;
+
         const treeNumber = parseInt(jsonData.PathOfBuilding.Tree[0].$.activeSpec);
-        const activeTree = jsonData.PathOfBuilding.Tree[0].Spec[treeNumber-1];
-        this.treeData = JSON.stringify(activeTree,null, 2);
+        this.activeTree = jsonData.PathOfBuilding.Tree[0].Spec[treeNumber-1];
+        this.treeData = JSON.stringify(this.activeTree,null, 2);
 
         this.pobString = data.toString();
         // this.treeData = this.pobString.match(/<Spec.*>/gm);
@@ -111,9 +119,12 @@ export class PlayerData {
         const valid = new Validate(this);
         if(!valid.isValid()) return Promise.resolve();
 
+        this.itemManager = new ItemManager();
+        this.itemManager.items(this);
+        console.log(this.itemManager.itemString);
+
         const recoup : Recoup = new Recoup();
         recoup.recoup(this);
-
 
         this.loyal = data.toString().match(/Skin of the Loyal/gm);
         this.lords = data.toString().match(/Skin of the Lords/gm);
@@ -446,7 +457,7 @@ export class PlayerData {
             const damageExcess = this.frDamage - this.playerStats['Ward'];
             this.fixArray.push('- You are taking ' + damageExcess + ' damage to your life pool from Forbidden Rite');
             this.fixArray.push('- Increase Chaos Resistance or increase ward or reduce life pool, Please see https://returnx.github.io/cwdt/');
-            if(this.frDamage < 200) {
+            if(damageExcess < 100) {
                 this.fixArray.push('- You can ignore this damage to life pool if FR does not kill you');
             }
         }

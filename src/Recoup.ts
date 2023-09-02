@@ -80,6 +80,11 @@ export class Recoup {
             }
         }        
 
+        const jewelStr = playerData.itemManager?.jewelMap.get(61419);
+        if(jewelStr?.match(/Unnatural Instinct/gm)!=null) {
+            playerData.lifeRecoup = playerData.lifeRecoup + 12;
+        }
+
         if(playerData.lifeRecoup == 0) {
             playerData.fixArray.push('- You are missing Life Recoup on tree/items')
         }

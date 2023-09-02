@@ -6,7 +6,6 @@ import { Message } from 'discord.js';
 import * as zlib from 'node:zlib'
 import xml2js from 'xml2js';
 import { Recoup } from './Recoup';
-import { Validate } from './Validate';
 import { ItemManager } from './ItemManager';
 
 export class PlayerData { 
@@ -116,18 +115,17 @@ export class PlayerData {
         // this.treeData = this.pobString.match(/<Spec.*>/gm);
         // this.treeData = this.treeData[0];
 
-        const valid = new Validate(this);
-        if(!valid.isValid()) return Promise.resolve();
+        // const valid = new Validate(this);
+        // if(!valid.isValid()) return Promise.resolve();
 
         this.itemManager = new ItemManager();
         this.itemManager.items(this);
-        console.log(this.itemManager.itemString);
 
         const recoup : Recoup = new Recoup();
         recoup.recoup(this);
 
-        this.loyal = data.toString().match(/Skin of the Loyal/gm);
-        this.lords = data.toString().match(/Skin of the Lords/gm);
+        this.loyal = this.itemString.match(/Skin of the Loyal/gm);
+        this.lords = this.itemString.match(/Skin of the Lords/gm);
 
         if(this.treeData.match(/28589/gm)!=null) {
             this.staffDefenseMastery = "Yes";
@@ -136,22 +134,20 @@ export class PlayerData {
         }
 
         // handling ward ---------------------------------------------------------
-        const wardArray = data.toString().match(/Ward: \d\d\d/gm);
+        const wardArray = this.itemString.match(/Ward: \d\d\d/gm);
 
         for(const item of wardArray!) {
             this.totalWard = this.totalWard + parseInt( item.substring(6, 9) );
         }
 
         let skin = false;
-        const loyal = data.toString().match(/Skin of the/gm);
-        if(loyal!=null) skin = true;
-
+        if(this.loyal!=null || this.lords!=null) skin = true;
  
         let multiplier = 1;
         if(skin) multiplier = multiplier + 1;
         if(this.staffDefenseMastery === "Yes") {multiplier = multiplier + 0.3;}
 
-        const flaskMultiArray = data.toString().match(/\d\d% increased Ward during Effect/gm);
+        const flaskMultiArray = this.itemString.match(/\d\d% increased Ward during Effect/gm);
         let flaskMulti = 0;
 
         if(flaskMultiArray!=null) {
@@ -163,7 +159,7 @@ export class PlayerData {
 
         // 3.22 Tattoos
         let turtleMultiplier = 0;
-        const turtleArray = data.toString().match(/3% increased Global Defences/gm);
+        const turtleArray = this.treeData.match(/3% increased Global Defences/gm);
         if(turtleArray != null) {
             turtleMultiplier = turtleArray.length * 3;
             turtleMultiplier = turtleMultiplier /100;
@@ -176,7 +172,7 @@ export class PlayerData {
         // TODO -- Handle flask suffix increased ward, handle incrased effect of flasks
         // ------------------------------------------------------------------------
 
-        const ringCount = data.toString().match(/Heartbound Loop/gm);
+        const ringCount = this.itemString.match(/Heartbound Loop/gm);
 
         if(ringCount?.length == 1) {
             this.loopRings = "One";
@@ -185,17 +181,17 @@ export class PlayerData {
             this.loopRingsCount = 2;
         }
 
-        const skeletonDamageArray = data.toString().match(/\d\d\d Physical Damage taken on Minion Death/gm);
+        const skeletonDamageArray = this.itemString.match(/\d\d\d Physical Damage taken on Minion Death/gm);
 
         for(const item of skeletonDamageArray!) {
             this.skeletonDamage = this.skeletonDamage + parseInt( item.substring(0, 3) );
         }
 
         this.checkGemLinks();
-        this.initLoopDamage(data);
+        this.initLoopDamage();
 
         // Skeleton Duration
-        const toDustArray = data.toString().match(/\d\d[%] reduced Skeleton Duration/gm);
+        const toDustArray = this.itemString.match(/\d\d[%] reduced Skeleton Duration/gm);
         if(toDustArray!=null) {
             for(const item of toDustArray!) {
                 this.totalDust = this.totalDust + parseInt( item.substring(0, 2) );
@@ -218,7 +214,7 @@ export class PlayerData {
             reducedDuration = reducedDuration + 15;
         }
 
-        if(this.pobString.match(/{crucible}10% reduced Skill Effect Duration/)!=null) {
+        if(this.itemString.match(/{crucible}10% reduced Skill Effect Duration/)!=null) {
             this.crucibleWeaponReducedDuration = true;
             reducedDuration = reducedDuration + 10;
         } 
@@ -265,16 +261,24 @@ export class PlayerData {
         }
 
         // Physical hits as elemental damage
-        const physAsEle = data.toString().match(/\d+[%] of Physical Damage from Hits taken as (Cold|Fire|Lightning) Damage$/gm);
+        const physAsEle = this.itemString.match(/\d+[%] of Physical Damage from Hits taken as (Cold|Fire|Lightning) Damage/gm);
 
         if(physAsEle != null) {
-            this.physAsEle = "Yes"
-            this.fixArray.push("- Remove Helm Implicit Phys as ele damage taken mod")
+            this.physAsEle = "Yes";
+            this.fixArray.push("- Remove Helm Implicit Phys as ele damage taken mod");
         }
 
-        const cdrList = data.toString().match(/\d+% increased Cooldown Recovery Rate$/gm)
+        const cdrList = this.itemString.match(/\d+% increased Cooldown Recovery Rate/gm);
         if(cdrList!=null) {
             for(const cdrMod of cdrList) {
+                this.cdr = this.cdr + parseInt(cdrMod.substring(0, cdrMod.indexOf('%')));
+            }
+        }
+
+        // CDR Tattoo of Valako Warrior
+        const treeCDR = this.treeData.match(/8% increased Cooldown Recovery Rate/gm);
+        if(treeCDR!=null) {
+            for(const cdrMod of treeCDR) {
                 this.cdr = this.cdr + parseInt(cdrMod.substring(0, cdrMod.indexOf('%')));
             }
         }
@@ -284,7 +288,7 @@ export class PlayerData {
             this.cdr = this.cdr + 30;
         }
 
-        const cryCDR = this.pobString.match(/Cry has \d+% increased Cooldown Recovery Rate/gm); 
+        const cryCDR = this.itemString.match(/Cry has \d+% increased Cooldown Recovery Rate/gm); 
         if(cryCDR!=null) {
             this.fixArray.push("- Please remove Warcry boot implicit and try again");
         }
@@ -297,27 +301,29 @@ export class PlayerData {
             this.pathfinder = "Yes";
         }
 
-        if(data.toString().match(/Pathfinder/gm)!=null) {
+        if(this.pobString.match(/Pathfinder/gm)!=null) {
             this.pathfinder = "Yes";
         }
+
+        // TODO - this is a bug if pathfinder jewel is not equipped
 
         if(this.pathfinder === "No" && this.playerClass === "Scion") {
             this.fixArray.push("- Missing Pathfinder Ascendancy");
         }
 
-        // if(data.toString().match(/59906/gm)!=null) {
+        // if(this.pobString.match(/59906/gm)!=null) {
         //     this.flaskMastery = "Yes";
         // } else {
         //     this.fixArray.push('- You are missing Utility flask mastery, check and compare your tree');
         // }
               
-        const flaskIncEffect = data.toString().match(/Flasks applied to you have \d+% increased Effect/gm);
+        const flaskIncEffect = this.itemString.match(/Flasks applied to you have \d+% increased Effect/gm);
         if(flaskIncEffect!=null) {
             this.flaskIncEffect = "Yes"
             this.fixArray.push('- Remove Increased Effect Of Flasks from items, tree and tattoos. This reduces your Ward');
         }
 
-        const wandCheck = data.toString().match(/Spectral Spirits when Equipped/gm);
+        const wandCheck = this.itemString.match(/Spectral Spirits when Equipped/gm);
         if(wandCheck != null) {
             this.swapWandCount = wandCheck.length;
             if(this.skeletonCWDT.level >= 19 ) {
@@ -342,7 +348,7 @@ export class PlayerData {
         }
 
         if(this.skeletonGem.qualityId != "Anomalous") {
-            if(data.toString().match(/Blessed Rebirth/) == null) {
+            if(this.itemString.match(/Blessed Rebirth/) == null) {
                 this.fixArray.push('- Summon Skeleton is not Anomalous, either buy Anomalous or Use Blessed Rebirth notable cluster jewel'); 
             }
         }
@@ -413,7 +419,7 @@ export class PlayerData {
             this.fixArray.push("- Your CDR is less than 27%, remove less duration mastery");
         }
 
-        const isBalbala = data.toString().match(/Balbala/gm);
+        const isBalbala = this.itemString.match(/Balbala/gm);
 
         if(isBalbala==null) {
             this.fixArray.push('- Your Timeless Jewel is not Balbala')
@@ -423,7 +429,7 @@ export class PlayerData {
             this.playerStats['Ward'] = parseInt(this.playerStats['Ward']);
         }
 
-        const vaalSummonSkeletons = data.toString().match(/Vaal Summon Skeletons/gm);
+        const vaalSummonSkeletons = this.pobString.match(/Vaal Summon Skeletons/gm);
         if(vaalSummonSkeletons!= null) {
             this.fixArray.push('- Vaal Summon Skeletons bricks the build, use normal');
         }
@@ -435,16 +441,16 @@ export class PlayerData {
         }
    
         if(this.treeData.match(/8281/gm)!=null) {
-            const lightOne = data.toString().match(/Adds \d+ to \d+ Lightning Damage( to Spells)?/gm);
-            const lightTwo = data.toString().match(/\d+ to \d+ Added Spell Lightning Damage (while holding a Shield|while wielding a Two Handed Weapon)/gm);
-            if(lightOne == null && lightTwo == null) {
+            const lightOne = this.itemString.match(/Adds \d+ to \d+ Lightning Damage( to Spells)?/gm);
+            const lightTwo = this.itemString.match(/\d+ to \d+ Added Spell Lightning Damage (while holding a Shield|while wielding a Two Handed Weapon)/gm);
+            const lightTree = this.treeData.match(/Tattoo of the Valako Warrior/gm);
+            if(lightOne == null && lightTwo == null && lightTree == null) {
                 this.fixArray.push('- Missing Added Lightning Damage to Spells to trigger Elementalist Shock, you are missing damage');
                 this.fixArray.push('- Get Added Lightning Damage on Helm Implicit or Ring or Abyss jewel or Tattoo of the Valako Warrior');
-                
             }
         }
 
-        if(this.pobString.match(/Allocates Assassin if you have the matching/)) {
+        if(this.itemString.match(/Allocates Assassin if you have the matching/)) {
             this.fixArray.push("Assassin Flesh/Flame breaks the build");
         }
 
@@ -465,10 +471,7 @@ export class PlayerData {
         return Promise.resolve();
     }
 
-    initLoopDamage(data : Buffer) {
-        // Math time now
-
-        // const ringList = data.toString().match(/\d+ Physical Damage taken on Minion Death/);
+    initLoopDamage() {
         
         let skeletonCount = 2;
 
@@ -573,7 +576,7 @@ export class PlayerData {
 
         if(this.skeletonDamage < threshold) {
             if(Object.keys(this.forbiddenRite).length === 0) {
-                if(data.toString().match(/ascendClassName="Saboteur"/) == null) {
+                if(this.pobString.match(/ascendClassName="Saboteur"/) == null) {
                     this.fixArray.push("- Forbidden Rite Gem is Missing, this is required for the bot to check if build works");
                 }
             }
@@ -698,11 +701,11 @@ export class PlayerData {
                 skeletonLevel = skeletonLevel + 2;
         }
 
-        if(this.pobString.match(/\+1 to Level of all Skill Gems/)!=null) {
+        if(this.itemString.match(/\+1 to Level of all Skill Gems/)!=null) {
             skeletonLevel = skeletonLevel + 1 ;
         }
 
-        if(this.pobString.match(/\+1 to Level of all Intelligence Skill Gems/)!=null) {
+        if(this.treeData.match(/\+1 to Level of all Intelligence Skill Gems/)!=null) {
             skeletonLevel = skeletonLevel + 1 ;
         }
 

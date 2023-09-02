@@ -37,6 +37,7 @@ export class ItemManager {
             this.jewelMap.set(nodeId,jewel);
             this.itemString = this.itemString + jewel;
         }
+        pd.itemString = this.itemString;
     }
 
 }

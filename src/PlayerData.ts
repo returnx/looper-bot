@@ -106,7 +106,7 @@ export class PlayerData {
 
         const jsonData = await xml2js.parseStringPromise(data);
         this.pobJson = jsonData;
-
+        
         const treeNumber = parseInt(jsonData.PathOfBuilding.Tree[0].$.activeSpec);
         this.activeTree = jsonData.PathOfBuilding.Tree[0].Spec[treeNumber-1];
         this.treeData = JSON.stringify(this.activeTree,null, 2);
@@ -268,7 +268,7 @@ export class PlayerData {
             this.fixArray.push("- Remove Helm Implicit Phys as ele damage taken mod");
         }
 
-        const cdrList = this.itemString.match(/\d+% increased Cooldown Recovery Rate/gm);
+        const cdrList = this.itemString.match(/\d+% increased Cooldown Recovery Rate\\n/gm);
         if(cdrList!=null) {
             for(const cdrMod of cdrList) {
                 this.cdr = this.cdr + parseInt(cdrMod.substring(0, cdrMod.indexOf('%')));
@@ -530,7 +530,6 @@ export class PlayerData {
         if(skeletonThreshold > this.skeletonDamage + this.frDamage) {
             this.fixArray.push('- Not Enough Forbidden Rite damage to trigger Summon Skeletons, Loop Fails');
         }
-
 
         if(this.frLinkedToSkeleton && this.loopRingsCount == 2 && this.skeletonGemLevel <= 20 && this.loyal!=null) {
             if(skeletonLevel>11 || parseInt(this.skeletonCWDT.level) > 5) {

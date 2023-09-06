@@ -261,7 +261,7 @@ export class PlayerData {
         }
 
         // Physical hits as elemental damage
-        const physAsEle = this.itemString.match(/\d+[%] of Physical Damage from Hits taken as (Cold|Fire|Lightning) Damage/gm);
+        const physAsEle = this.itemString.match(/\d+[%] of Physical Damage from Hits taken as (Cold|Fire|Lightning) Damage\\n/gm);
 
         if(physAsEle != null) {
             this.physAsEle = "Yes";
@@ -451,7 +451,7 @@ export class PlayerData {
         }
 
         if(this.itemString.match(/Allocates Assassin if you have the matching/)) {
-            this.fixArray.push("Assassin Flesh/Flame breaks the build");
+            this.fixArray.push("- Assassin Flesh/Flame breaks the build");
         }
 
         if(this.playerStats['Ward'] >= this.frDamage ) {

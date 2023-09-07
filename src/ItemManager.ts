@@ -9,15 +9,16 @@ export class ItemManager {
 
     items(pd : PlayerData) {
         const itemsLength = pd.pobJson.PathOfBuilding.Items[0].Item.length;
+        const itemSet = parseInt(pd.pobJson.PathOfBuilding.Items[0].$.activeItemSet);
 
         for(let i =0 ; i <itemsLength; i++) {
             const id = parseInt(pd.pobJson.PathOfBuilding.Items[0].Item[i].$.id);
             this.itemArray.set(id,JSON.stringify(pd.pobJson.PathOfBuilding.Items[0].Item[i]));
         }
 
-        const slotsLength = pd.pobJson.PathOfBuilding.Items[0].ItemSet[0].Slot.length
+        const slotsLength = pd.pobJson.PathOfBuilding.Items[0].ItemSet[itemSet].Slot.length
         for(let i = 0; i < slotsLength; i++ ) {
-            const id = parseInt(pd.pobJson.PathOfBuilding.Items[0].ItemSet[0].Slot[i].$.itemId);
+            const id = parseInt(pd.pobJson.PathOfBuilding.Items[0].ItemSet[itemSet].Slot[i].$.itemId);
             
             if(id!=0) {
                 let item = this.itemArray.get(id);

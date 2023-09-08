@@ -9,7 +9,7 @@ export class ItemManager {
 
     items(pd : PlayerData) {
         const itemsLength = pd.pobJson.PathOfBuilding.Items[0].Item.length;
-        const itemSet = parseInt(pd.pobJson.PathOfBuilding.Items[0].$.activeItemSet);
+        const itemSet = parseInt(pd.pobJson.PathOfBuilding.Items[0].$.activeItemSet) - 1;
 
         for(let i =0 ; i <itemsLength; i++) {
             const id = parseInt(pd.pobJson.PathOfBuilding.Items[0].Item[i].$.id);

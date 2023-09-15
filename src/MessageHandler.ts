@@ -1,6 +1,6 @@
 import { Client, Message, Channel, TextChannel } from 'discord.js';
 import { PlayerData } from './PlayerData';
-import {bubble, cdr, flask, help, mana, pob, rareRing, shock, tanky, upgrade} from './helpStrings.js';
+import {bubble, cdr, flask, help, mana, pantheon, pob, rareRing, shock, tanky, upgrade} from './helpStrings.js';
 
 export class MessageHandler {
 
@@ -17,7 +17,7 @@ export class MessageHandler {
     async handleMessage(message: Message) {
         if (message.author.bot) return;
 
-        if(message.content.startsWith("check") || message.channelId === "988474586490368110") {
+        if(message.channelId === "1061128080388796476") {
             if(message.content.includes("pastebin.com") || message.content.includes("pobb.in")) {
                 await this.handlePoB(message);
             }
@@ -61,6 +61,10 @@ export class MessageHandler {
 
         if (message.content.match(/[Hh]elp flask/)) {
             await this.sendMessage(message, flask);
+        }
+
+        if (message.content.match(/[Hh]elp pantheon/)) {
+            await this.sendMessage(message, pantheon);
         }
     }
 

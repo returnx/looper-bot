@@ -20,6 +20,7 @@ help cdr        # Help on CDR
 help shock      # Help on how to Shock and Generate Power Charges
 help bubble     # How to kill temporal bubble monsters
 help flask      # How to get 3/4 flasks working
+help pantheon   # Which pantheon to use
 \`\`\`
 Post Your PoB in https://discord.com/channels/852104066401173514/988474586490368110
 `;
@@ -35,4 +36,6 @@ const bubble = "Kill temporal bubble -> https://discord.com/channels/85210406640
 
 const flask = "Flask help -> https://discord.com/channels/852104066401173514/984054952324370442/1098302520524292096";
 
-export { mana, rareRing, upgrade, tanky, help, cdr, pob, shock, bubble, flask}
+const pantheon = "Pantheons allowed - Brine King/Arakaali/Yugul/Garukhan";
+
+export { mana, rareRing, upgrade, tanky, help, cdr, pob, shock, bubble, flask, pantheon}

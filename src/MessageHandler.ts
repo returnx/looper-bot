@@ -17,7 +17,7 @@ export class MessageHandler {
     async handleMessage(message: Message) {
         if (message.author.bot) return;
 
-        if(message.channelId === "1061128080388796476") {
+        if(message.content.startsWith("check") || message.channelId === "988474586490368110") {
             if(message.content.includes("pastebin.com") || message.content.includes("pobb.in")) {
                 await this.handlePoB(message);
             }

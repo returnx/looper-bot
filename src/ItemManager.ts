@@ -26,7 +26,6 @@ export class ItemManager {
                 this.equippedItems.push(item);
                 this.itemString = this.itemString + item;
             }
-
         }
 
         for(let i = 0; i < pd.activeTree.Sockets[0].Socket.length; i++)  {

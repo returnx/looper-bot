@@ -3,6 +3,16 @@ import { PlayerData } from "./PlayerData";
 export class Recoup {
 
     recoup(playerData : PlayerData) {
+
+        
+        playerData.itemManager?.jewelMap.forEach((jewel)=>{
+            console.log(jewel);
+            if(jewel.match(/Nine Lives/gm)!=null) {
+                playerData.lifeRecoup = 25;
+                playerData.manaRecoup = 25;
+            }
+        });
+
         // Mana recoup
         const battleRouse = playerData.treeData.match(/5289/gm);
         if(battleRouse!=null) {
@@ -22,14 +32,6 @@ export class Recoup {
             }
         }
         
-        if(playerData.manaRecoup === 0) {
-            playerData.fixArray.push('- You are missing Mana Recoup on tree/items');
-        }
-
-        if(playerData.manaRecoup < 20) {
-            playerData.fixArray.push('- You want 20 or more Mana Recoup, check your tree & items');
-        }
-
         // Life Recoup
         if(playerData.treeData.match(/37403/gm)!=null) {
             playerData.lifeRecoup = playerData.lifeRecoup + 18;
@@ -80,9 +82,22 @@ export class Recoup {
             }
         }        
 
-        const jewelStr = playerData.itemManager?.jewelMap.get(61419);
+        let jewelStr = playerData.itemManager?.jewelMap.get(61419);
         if(jewelStr?.match(/Unnatural Instinct/gm)!=null) {
             playerData.lifeRecoup = playerData.lifeRecoup + 12;
+        }
+        
+        jewelStr = playerData.itemManager?.jewelMap.get(61834);
+        if(jewelStr?.match(/Unnatural Instinct/gm)!=null) {
+            playerData.lifeRecoup = playerData.lifeRecoup + 12;
+        }
+
+        if(playerData.manaRecoup === 0) {
+            playerData.fixArray.push('- You are missing Mana Recoup on tree/items');
+        }
+
+        if(playerData.manaRecoup < 20) {
+            playerData.fixArray.push('- You want 20 or more Mana Recoup, check your tree & items');
         }
 
         if(playerData.lifeRecoup == 0) {

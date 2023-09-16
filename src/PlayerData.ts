@@ -415,6 +415,10 @@ export class PlayerData {
             }
         }
 
+        if(this.skeletonDuration == 0.165 && this.cdr < 52) {
+            this.fixArray.push("- Please see help on To Dusts & Less Duration in check list, type help cdr")
+        }
+
         if(this.cdr < 27 && this.lessDurationMastery ===  "Yes") {
             this.fixArray.push("- Your CDR is less than 27%, remove less duration mastery");
         }

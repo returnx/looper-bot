@@ -6,7 +6,6 @@ export class Recoup {
 
         
         playerData.itemManager?.jewelMap.forEach((jewel)=>{
-            console.log(jewel);
             if(jewel.match(/Nine Lives/gm)!=null) {
                 playerData.lifeRecoup = 25;
                 playerData.manaRecoup = 25;
@@ -86,7 +85,7 @@ export class Recoup {
         if(jewelStr?.match(/Unnatural Instinct/gm)!=null) {
             playerData.lifeRecoup = playerData.lifeRecoup + 12;
         }
-        
+
         jewelStr = playerData.itemManager?.jewelMap.get(61834);
         if(jewelStr?.match(/Unnatural Instinct/gm)!=null) {
             playerData.lifeRecoup = playerData.lifeRecoup + 12;

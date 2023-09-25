@@ -21,8 +21,11 @@ help shock      # Help on how to Shock and Generate Power Charges
 help bubble     # How to kill temporal bubble monsters
 help flask      # How to get 3/4 flasks working
 help pantheon   # Which pantheon to use
+
 \`\`\`
 Post Your PoB in https://discord.com/channels/852104066401173514/988474586490368110
+
+CWDT Info - https://cwdt.info/
 `;
 
 

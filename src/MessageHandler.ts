@@ -95,7 +95,7 @@ export class MessageHandler {
         const messageString = 
 
             `\`\`\`----------------------PoB Check----------------------
-[Life: ${playerData.playerStats['Life']}] [EnergyShield: ${playerData.playerStats['EnergyShield']}] [Mana: ${playerData.playerStats['Mana']}] [ChaosResist: ${playerData.playerStats['ChaosResist']}] [Armour: ${playerData.playerStats['Armour']}]
+[Life: ${playerData.playerStats['Life']}] [EnergyShield: ${playerData.playerStats['EnergyShield']}] [Mana: ${playerData.playerStats['Mana']}] [ChaosResist: ${playerData.chaosResistance}] [Armour: ${playerData.playerStats['Armour']}]
 
 [Cooldown - ${playerData.cdr}%] [Skeleton Duration - ${playerData.skeletonDuration}] [To Dusts - ${playerData.totalDust}] [Less Duration Mastery - ${playerData.lessDurationMastery}]
 

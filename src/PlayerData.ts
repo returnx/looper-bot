@@ -50,6 +50,7 @@ export class PlayerData {
     bodyLoopSpeed = "Fail";
     totalWard = 0;
     skeletonGemLevel = 0;
+    chaosResistance = 0;
 
     crucibleWeaponReducedDuration = false;
 
@@ -156,6 +157,21 @@ export class PlayerData {
             }
         }
         
+        this.chaosResistance = parseInt(this.playerStats['ChaosResist']);
+        let progenesisId = null;
+        this.itemManager.itemArray.forEach((value :string , key)=> {
+            if(value.match(/Progenesis/) || value.match(/Amethyst Flask/)) {
+                progenesisId = key;
+            }
+        });
+
+        if(progenesisId!=null) {
+            const flaskMatcher = new RegExp(`<Slot itemPbURL="" name="Flask \\d" itemId="${progenesisId}"/>`)
+            const progStr = this.pobString.match(flaskMatcher);
+            if(progStr!=null) {
+                this.chaosResistance = this.chaosResistance + 35;
+            }
+        }
 
         // 3.22 Tattoos
         let turtleMultiplier = 0;
@@ -498,7 +514,7 @@ export class PlayerData {
 
         this.frDamage = Math.floor((parseInt(this.playerStats['Life']) * 0.4  
                         + parseInt(this.playerStats['EnergyShield']) * 0.25) 
-                        * (1 - parseInt(this.playerStats['ChaosResist'])/100));
+                        * (1 - this.chaosResistance/100));
         
         this.totalLoopDamage = this.skeletonDamage + this.frDamage;
 

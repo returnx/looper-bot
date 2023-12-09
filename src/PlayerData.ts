@@ -235,7 +235,7 @@ export class PlayerData {
             reducedDuration = reducedDuration + 10;
         } 
 
-        const reduction = (this.totalDust + reducedDuration + this.minionSpeed.quality*2)/100;
+        const reduction = (this.totalDust + reducedDuration)/100;
 
         let finalReduced = 20 * (1 - reduction);
 
@@ -355,50 +355,38 @@ export class PlayerData {
             this.fixArray.push('- Armor is not 0, this must be 0');
         }
 
-        if(this.minionSpeed.quality < 20) {
-            this.fixArray.push('- Minion Speed is not 20% quality');
+    
+        if(this.itemString.match(/Blessed Rebirth/) == null) {
+            this.fixArray.push('- 3.23 Dont forget to Use Blessed Rebirth notable cluster jewel');
         }
-
-        if(this.minionSpeed.qualityId != "Anomalous") {
-            this.fixArray.push('- Minion Speed is not Anomalous');
-        }
-
-        if(this.skeletonGem.qualityId != "Anomalous") {
-            if(this.itemString.match(/Blessed Rebirth/) == null) {
-                this.fixArray.push('- Summon Skeleton is not Anomalous, either buy Anomalous or Use Blessed Rebirth notable cluster jewel'); 
-            }
-        }
+        
 
         if(this.cdr < 9) {
             this.fixArray.push('- Missing 9% cdr, craft on belt or boots');
-            if(![34, 59].includes(this.totalDust) ) {
-                this.fixArray.push('- For 9%-26% CDR, To Dust Total Reduced Skeleton Duration must be 34 + Window Of Opporutnity Notable OR 59 Without Window Of Opportunity Notable');
+            if(![74, 99].includes(this.totalDust) ) {
+                this.fixArray.push('- For 9%-26% CDR, To Dust Total Reduced Skeleton Duration must be 74 + Window Of Opporutnity Notable OR 99 Without Window Of Opportunity Notable');
             }
         }
 
         if(this.cdr > 9 && this.cdr <27 ) {
-            if(![34, 59].includes(this.totalDust) ) {
-                this.fixArray.push('- For 9%-26% CDR, To Dust Total Reduced Skeleton Duration must be 34 + Window Of Opporutnity Notable OR 59 Without Window Of Opportunity Notable');
+            if(![74, 99].includes(this.totalDust) ) {
+                this.fixArray.push('- For 9%-26% CDR, To Dust Total Reduced Skeleton Duration must be 74 + Window Of Opporutnity Notable OR 99 Without Window Of Opportunity Notable');
             }
         }
 
         if(this.cdr >= 27 && this.cdr < 52) {
             if(this.crucibleWeaponReducedDuration == true) {
                 if(this.skeletonDuration != 0.198) {
-                    if(this.minionSpeed.quality > 20) {
-                        this.fixArray.push('- Check your Skeleton Cooldown and Skill Duration in PoB, there is something wrong.');
-                    } else {
-                        this.fixArray.push("- Check To Dust, it should be 24 with duration mastery '10% less' or 48 with 4/20 Less Duration gem. Because The Weapon has 10% reduced");
-                    }
+                    this.fixArray.push("- Check To Dust, it should be 24 with duration mastery '10% less' or 48 with 4/20 Less Duration gem. Because The Weapon has 10% reduced");
                 }
             } else {
                 // because if you go with To Dusts only, then less duration can't be taken. Only Less duration gem
-                if(![34, 58].includes(this.totalDust) ) {
-                    this.fixArray.push("- To Dust sum must be total 34 with duration mastery on tree '10% less skill effect duration'");
-                    this.fixArray.push("- OR Second Option To Dust sum must 58 and 4/20 Less Duration gem without less duration on tree");
+                if(![74, 98].includes(this.totalDust) ) {
+                    this.fixArray.push("- To Dust sum must be total 74 with duration mastery on tree '10% less skill effect duration'");
+                    this.fixArray.push("- OR Second Option To Dust sum must 98 and 4/20 Less Duration gem without less duration on tree");
                 }
     
-                if(this.totalDust == 34 ) {
+                if(this.totalDust == 74 ) {
                     if(this.lessDurationMastery ===  "No") {
                         this.fixArray.push("- Allocate Duration Mastery on tree '10% less skill effect duration' OR use 4/20 Less Duration gem for 27% CDR");
                     }
@@ -536,16 +524,13 @@ export class PlayerData {
             threshold = 9999;
         }
 
-        if(this.bodyCWDT.qualityId === "Divergent") {
-            threshold = threshold * (1 - this.bodyCWDT.quality/100);
-        }
+        threshold = threshold * (1 - Math.floor(this.bodyCWDT.quality/2)/100);
 
         // Case where skeleton threshold is less body threshold, happens with level 21 skeletons
 
         let skeletonThreshold = cwdtArray[parseInt(this.skeletonCWDT.level)-1];
-        if(this.skeletonCWDT.qualityId === "Divergent") {
-            skeletonThreshold = skeletonThreshold * (1 - this.skeletonCWDT.quality/100);
-        }
+        skeletonThreshold = skeletonThreshold * (1 - Math.floor(this.skeletonCWDT.quality/2)/100);
+        
 
         if(skeletonThreshold > this.skeletonDamage + this.frDamage) {
             this.fixArray.push('- Not Enough Forbidden Rite damage to trigger Summon Skeletons, Loop Fails');
@@ -557,7 +542,6 @@ export class PlayerData {
                 this.fixArray.push('- Summon Skeleton Level 11 in helm');
                 this.fixArray.push('- CWDT Level 5 in helm');
                 this.fixArray.push('- Forbddein Rite Level 1 in helm');
-                this.fixArray.push('- Anoamlous Minion Speed 20% quality helm');
             }
         }
 
@@ -617,12 +601,12 @@ export class PlayerData {
                 }
             }
 
-            if(this.loopRingsCount === 1) {
-                if(this.bodyCWDT.qualityId === "Normal" && this.treeData.match(/28535/) === null) {
-                    this.fixArray.push("- Body CWDT Quality Should be Divergent when using only one heartbound ring");
-                    this.fixArray.push("- Type help ring in chat and learn how to use only one heartbound ring");
-                }
-            }
+            // if(this.loopRingsCount === 1) {
+            //     if(this.bodyCWDT.qualityId === "Normal" && this.treeData.match(/28535/) === null) {
+            //         this.fixArray.push("- Body CWDT Quality Should be Divergent when using only one heartbound ring");
+            //         this.fixArray.push("- Type help ring in chat and learn how to use only one heartbound ring");
+            //     }
+            // }
               
             this.fixArray.push('- Loop is either half speed or fails, please use calculator to check https://returnx.github.io/cwdt/');
             this.fixArray.push('- Required Self damage to loop: ' + threshold);
@@ -698,10 +682,6 @@ export class PlayerData {
 
         if(Object.keys(this.skeletonGem).length === 0) {
             this.fixArray.push('- Summon Skeletons is missing');
-        }
-
-        if(Object.keys(this.minionSpeed).length === 0) {
-            this.fixArray.push('- Minion Speed is missing');
         }
 
         if(Object.keys(this.bodyCWDT).length === 0) {

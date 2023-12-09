@@ -107,7 +107,7 @@ export class MessageHandler {
 
 Loop Status - ${playerData.bodyLoopSpeed}
 
-[Summon Skeletons  - ${playerData.skeletonGem.qualityId} ${playerData.skeletonGem.level}/${playerData.skeletonGem.quality}]  [Minion Speed     - ${playerData.minionSpeed.qualityId} ${playerData.minionSpeed.level}/${playerData.minionSpeed.quality}] [Skeleton CWDT    - ${playerData.skeletonCWDT.qualityId} ${playerData.skeletonCWDT.level}/${playerData.skeletonCWDT.quality}]
+[Summon Skeletons  - ${playerData.skeletonGem.qualityId} ${playerData.skeletonGem.level}/${playerData.skeletonGem.quality}] [Skeleton CWDT    - ${playerData.skeletonCWDT.qualityId} ${playerData.skeletonCWDT.level}/${playerData.skeletonCWDT.quality}]
 [Forbidden Rite    - ${playerData.forbiddenRite.qualityId} ${playerData.forbiddenRite.level}/${playerData.forbiddenRite.quality}]    [FR CWDT          - ${playerData.frCWDT.qualityId} ${playerData.frCWDT.level}/${playerData.frCWDT.quality}]
 [Body CWDT         - ${playerData.bodyCWDT.qualityId} ${playerData.bodyCWDT.level}/${playerData.bodyCWDT.quality}]  [Weapon CWDT      - ${playerData.weaponCWDT.qualityId} ${playerData.weaponCWDT.level}/${playerData.weaponCWDT.quality}]
 \`\`\``;

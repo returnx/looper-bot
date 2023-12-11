@@ -76,15 +76,7 @@ export class PlayerData {
     setGemData(gem : any, gemData : any, slot: string) {
         if(!(slot === "Weapon 2 Swap" || slot ==="Weapon 1 Swap")) {
             gem.level = gemData.level;
-            if(gemData.qualityId === 'Alternate1') {
-                gem.qualityId = 'Anomalous';
-            } else if (gemData.qualityId === 'Alternate2') {
-                gem.qualityId = 'Divergent';  
-            } else if (gemData.qualityId === 'Alternate3') {
-                gem.qualityId = 'Phantasmal';
-            } else {
-                gem.qualityId = 'Normal';
-            }
+            // gem.qualityId = 'Normal';
             gem.quality = gemData.quality;
             gem.slot = slot;
         }
@@ -685,8 +677,8 @@ export class PlayerData {
         }
 
         if(Object.keys(this.bodyCWDT).length === 0) {
-            this.fixArray.push('- CWDT Gem in Body is missing, this is required for bot to check');
-        }
+            this.fixArray.push('- CWDT Gem in Body is missing? Using Weapon CWDT for check');
+            this.setGemData(this.bodyCWDT, this.weaponCWDT,"Body Armour");        }
     }
 
     checkGemLinks() {

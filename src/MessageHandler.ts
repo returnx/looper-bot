@@ -107,9 +107,9 @@ export class MessageHandler {
 
 Loop Status - ${playerData.bodyLoopSpeed}
 
-[Summon Skeletons  - ${playerData.skeletonGem.qualityId} ${playerData.skeletonGem.level}/${playerData.skeletonGem.quality}] [Skeleton CWDT    - ${playerData.skeletonCWDT.qualityId} ${playerData.skeletonCWDT.level}/${playerData.skeletonCWDT.quality}]
-[Forbidden Rite    - ${playerData.forbiddenRite.qualityId} ${playerData.forbiddenRite.level}/${playerData.forbiddenRite.quality}]    [FR CWDT          - ${playerData.frCWDT.qualityId} ${playerData.frCWDT.level}/${playerData.frCWDT.quality}]
-[Body CWDT         - ${playerData.bodyCWDT.qualityId} ${playerData.bodyCWDT.level}/${playerData.bodyCWDT.quality}]  [Weapon CWDT      - ${playerData.weaponCWDT.qualityId} ${playerData.weaponCWDT.level}/${playerData.weaponCWDT.quality}]
+[Summon Skeletons  - ${playerData.skeletonGem.slot} ${playerData.skeletonGem.level}/${playerData.skeletonGem.quality}] [Skeleton CWDT    - ${playerData.skeletonCWDT.slot} ${playerData.skeletonCWDT.level}/${playerData.skeletonCWDT.quality}]
+[Forbidden Rite    - ${playerData.forbiddenRite.slot} ${playerData.forbiddenRite.level}/${playerData.forbiddenRite.quality}]    [FR CWDT          - ${playerData.frCWDT.slot} ${playerData.frCWDT.level}/${playerData.frCWDT.quality}]
+[Body CWDT         - ${playerData.bodyCWDT.slot} ${playerData.bodyCWDT.level}/${playerData.bodyCWDT.quality}]  [Weapon CWDT      - ${playerData.weaponCWDT.slot} ${playerData.weaponCWDT.level}/${playerData.weaponCWDT.quality}]
 \`\`\``;
         this.sendMessage(message, messageString);
 

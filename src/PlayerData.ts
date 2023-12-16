@@ -582,13 +582,13 @@ export class PlayerData {
         } else {
 
             if(this.loyal!=null) {
-                if(this.bodyCWDT.level > 20) {
+                if(this.bodyCWDT.level > 19) {
                     this.fixArray.push('- CWDT for Skin of the Loyal should be level 19');
                 }
             }
     
             if(this.lords!=null) {
-                if(this.bodyCWDT.level > 19) {
+                if(this.bodyCWDT.level > 18) {
                     this.fixArray.push('- CWDT for Skin of the Lords should be level 18. OR you should know what you are doing');
                 }
             }

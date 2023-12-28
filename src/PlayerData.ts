@@ -23,6 +23,7 @@ export class PlayerData {
     skeletonCWDT : any = {};
     frCWDT : any = {};
     lessDuration : any = {};
+    swiftAffliction : any = {};
     skeletonEmpower : any = {};
     frLinkedToSkeleton = false;
 
@@ -245,6 +246,10 @@ export class PlayerData {
             finalReduced = finalReduced * ( 1 - less/100);
         }
 
+        if(Object.keys(this.swiftAffliction).length !=0 ) {
+            finalReduced = finalReduced * (1 - 25/100);
+        }
+
         if(finalReduced > 0.198 && finalReduced <= 0.231) {
             this.skeletonDuration = 0.231;
         }
@@ -276,6 +281,10 @@ export class PlayerData {
             this.fixArray.push("- Remove Helm Implicit Phys as ele damage taken mod");
         }
 
+        if(this.itemString.match(/\d+% additional Physical Damage Reduction/gm)!=null) {
+            this.fixArray.push("- Check Items for Additional Physical Damage Reduction");
+        }
+
         const cdrList = this.itemString.match(/\d+% increased Cooldown Recovery Rate\\n/gm);
         if(cdrList!=null) {
             for(const cdrMod of cdrList) {
@@ -296,12 +305,24 @@ export class PlayerData {
             this.cdr = this.cdr + 30;
         }
 
+        if(this.treeData.match(/58827/)!=null) {
+            this.cdr = this.cdr + 15;
+        }
+
+        if(this.itemString.match(/Allocates Saboteur/m)!=null) {
+            this.cdr = this.cdr + 15;
+        }
+
         const cryCDR = this.itemString.match(/Cry has \d+% increased Cooldown Recovery Rate/gm); 
         if(cryCDR!=null) {
             this.fixArray.push("- Please remove Warcry boot implicit and try again");
         }
     
         if(this.treeData.match(/34098/gm)!=null) {
+            this.MindOverMatter = "Yes";
+        }
+
+        if(this.itemString.match(/Mind Over Matter/m) !=null) {
             this.MindOverMatter = "Yes";
         }
 
@@ -356,20 +377,20 @@ export class PlayerData {
         if(this.cdr < 9) {
             this.fixArray.push('- Missing 9% cdr, craft on belt or boots');
             if(![74, 99].includes(this.totalDust) ) {
-                this.fixArray.push('- For 9%-26% CDR, To Dust Total Reduced Skeleton Duration must be 74 + Window Of Opporutnity Notable OR 99 Without Window Of Opportunity Notable');
+                this.fixArray.push('- For 9% CDR, To Dust Total Reduced Skeleton Duration must be 74 + Window Of Opporutnity Notable OR 99 Without Window Of Opportunity Notable');
             }
         }
 
         if(this.cdr > 9 && this.cdr <27 ) {
             if(![74, 99].includes(this.totalDust) ) {
-                this.fixArray.push('- For 9%-26% CDR, To Dust Total Reduced Skeleton Duration must be 74 + Window Of Opporutnity Notable OR 99 Without Window Of Opportunity Notable');
+                this.fixArray.push('- For 9% CDR, To Dust Total Reduced Skeleton Duration must be 74 + Window Of Opporutnity Notable OR 99 Without Window Of Opportunity Notable');
             }
         }
 
         if(this.cdr >= 27 && this.cdr < 52) {
             if(this.crucibleWeaponReducedDuration == true) {
                 if(this.skeletonDuration != 0.198) {
-                    this.fixArray.push("- Check To Dust, it should be 24 with duration mastery '10% less' or 48 with 4/20 Less Duration gem. Because The Weapon has 10% reduced");
+                    this.fixArray.push("- Check To Dust, it should be 64 with duration mastery '10% less' or 48 with 4/20 Less Duration gem. Because The Weapon has 10% reduced");
                 }
             } else {
                 // because if you go with To Dusts only, then less duration can't be taken. Only Less duration gem
@@ -398,16 +419,17 @@ export class PlayerData {
             //     }
             // }
 
-            if(reduction!=0.98) {
-                this.fixArray.push('- Total Skeleton Duration Reduction must be 98 and also use 20/20 Less duration gem. See #check-list');
+            if(!(reduction==0.98 || reduction == 0.99)) {
+                this.fixArray.push('- Option 1. Skeleton Reduced Duration must be 98 + 20/20 Less duration gem. Type help cdr');
+                this.fixArray.push('- Option 2. Total Skeleton Reduced Duration must be 99 + Level 1 Swift Affliction. Type help cdr');
             }
 
             if(this.skeletonDuration!=0.165) {
-                this.fixArray.push('- Less Duration 20/20 gem required for 52 CDR');
+                this.fixArray.push('- Less Duration 20/20 or Level 1 Swift Affliction gem required for 52 CDR. Type help cdr');
             }
 
             if(this.lessDurationMastery ===  "Yes") {
-                this.fixArray.push('- Less Duration Mastery is not required for 52% cdr, use a 20/20 Less Duration Gem with Summon Skeletons, see #check-list');
+                this.fixArray.push('- Less Duration Mastery is not required for 52% cdr. Type help cdr');
             }
         }
 
@@ -422,7 +444,7 @@ export class PlayerData {
         const isBalbala = this.itemString.match(/Balbala/gm);
 
         if(isBalbala==null) {
-            this.fixArray.push('- Your Timeless Jewel is not Balbala')
+            this.fixArray.push('- Your Timeless Jewel is not Balbala. Are you sure about that?');
         }
 
         if(!Number.isInteger(this.playerStats['Ward'])) {
@@ -635,6 +657,10 @@ export class PlayerData {
 
                             if(slot.Gem[j].$.nameSpec === "Less Duration" && slot.Gem[j].$.enabled === "true") {
                                 this.setGemData(this.lessDuration, slot.Gem[j].$, slot.$.slot );
+                            }
+
+                            if(slot.Gem[j].$.nameSpec === "Swift Affliction" && slot.Gem[j].$.enabled === "true") {
+                                this.setGemData(this.swiftAffliction, slot.Gem[j].$, slot.$.slot );
                             }
 
                             if(slot.Gem[j].$.nameSpec === "Empower" && slot.Gem[j].$.enabled === "true") {

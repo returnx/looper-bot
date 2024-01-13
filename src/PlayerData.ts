@@ -257,7 +257,7 @@ export class PlayerData {
         if(finalReduced > 0.231) {
             this.skeletonDuration = finalReduced;
             if(this.skeletonDuration > 0.250) {
-                this.fixArray.push('- Check To Dusts and Reduced/Increased duration of skills on passive tree and also items');
+                this.fixArray.push('- Incorrect Skeleton Duration, type help cdr');
             }
         }
 
@@ -270,7 +270,7 @@ export class PlayerData {
         }
 
         if(finalReduced < 0.132) {
-            this.fixArray.push('- Check To Dusts and Reduced/Increased duration of skills on passive tree and also items');
+            this.fixArray.push('- Incorrect Skeleton Duration, type help cdr');
         }
 
         // Physical hits as elemental damage
@@ -434,7 +434,7 @@ export class PlayerData {
         }
 
         if(this.skeletonDuration == 0.165 && this.cdr < 52) {
-            this.fixArray.push("- Please see help on To Dusts & Less Duration in check list, type help cdr")
+            this.fixArray.push("- Incorrect Skeleton Duration, type help cdr")
         }
 
         if(this.cdr < 27 && this.lessDurationMastery ===  "Yes") {
@@ -488,6 +488,10 @@ export class PlayerData {
             if(damageExcess < 100) {
                 this.fixArray.push('- You can ignore this damage to life pool if FR does not kill you');
             }
+        }
+
+        if(this.itemManager.itemString.match(/Ancestral Bond/) != null) {
+            this.fixArray.push("- You have Ancestral Bond, do you want to play Totems?")
         }
 
         return Promise.resolve();
@@ -547,7 +551,13 @@ export class PlayerData {
         
 
         if(skeletonThreshold > this.skeletonDamage + this.frDamage) {
-            this.fixArray.push('- Not Enough Forbidden Rite damage to trigger Summon Skeletons, Loop Fails');
+            this.fixArray.push('- Not Enough Forbidden Rite damage to trigger Summon Skeletons, Loop Fails. Increase life or reduce Chaos Res');
+            this.fixArray.push('- Current  FR Damage - ' + this.frDamage);
+            this.fixArray.push('- Required FR Damage - ' + (skeletonThreshold - this.skeletonDamage));
+
+            if(this.skeletonCWDT.quality < 20) {
+                this.fixArray.push("Skeleton CWDT quality is not 20, are you sure about that?");
+            }
         }
 
         if(this.frLinkedToSkeleton && this.loopRingsCount == 2 && this.skeletonGemLevel <= 20 && this.loyal!=null) {
@@ -647,7 +657,7 @@ export class PlayerData {
             if(slot.Gem!=undefined) {
                 for(let i = 0; i <slot.Gem.length; i++) {
 
-                    if(slot.Gem[i].$.nameSpec === 'Summon Skeletons' || slot.Gem[i].$.nameSpec === 'Vaal Summon Skeletons') {
+                    if(slot.Gem[i].$.nameSpec.match(/Summon Skeletons/)!=null) {
                         this.setGemData(this.skeletonGem, slot.Gem[i].$, slot.$.slot );
     
                         for(let j = 0; j < slot.Gem.length; j++) {

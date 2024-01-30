@@ -23,7 +23,7 @@ export class MessageHandler {
             }
         }
 
-        if(message.content.match(/^[Hh][Ee][Ll][Pp]$/) || message.content.match(/help list/)) {
+        if(message.content.match(/^[Hh][Ee][Ll][Pp]$/) || message.content.match(/[Hh][Ee][Ll][Pp] [Ll][Ii][Ss][Tt]/)) {
             await this.sendMessage(message, help);
         }
 
@@ -35,7 +35,7 @@ export class MessageHandler {
             await this.sendMessage(message, mana);
         }
 
-        if (message.content.match(/[Hh][Ee][Ll][Pp] [Rr][Aa][Rr][Ee]/) || message.content.match(/[Hh]elp ring/)) {
+        if (message.content.match(/[Hh][Ee][Ll][Pp] [Rr][Aa][Rr][Ee]/) || message.content.match(/[Hh][Ee][Ll][Pp] [Rr][Ii][Nn][Gg]/)) {
             await this.sendMessage(message, rareRing);
         }
 
@@ -47,7 +47,7 @@ export class MessageHandler {
             await this.sendMessage(message, cdr);
         }
 
-        if (message.content.match(/[Hh][Ee][Ll][Pp] [Dd][Pp][Ss]/) || message.content.match(/[Hh]elp pob/)) {
+        if (message.content.match(/[Hh][Ee][Ll][Pp] [Dd][Pp][Ss]/) || message.content.match(/[[Hh][Ee][Ll][Pp] [Pp][Oo][Bb]/)) {
             await this.sendMessage(message, pob);
         }
 

@@ -23,7 +23,7 @@ export class MessageHandler {
             }
         }
 
-        if(message.content.match(/^help$/) || message.content.match(/help list/)) {
+        if(message.content.match(/^[hH]elp$/) || message.content.match(/help list/)) {
             await this.sendMessage(message, help);
         }
 

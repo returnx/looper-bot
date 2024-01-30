@@ -23,47 +23,47 @@ export class MessageHandler {
             }
         }
 
-        if(message.content.match(/^[hH]elp$/) || message.content.match(/help list/)) {
+        if(message.content.match(/^[Hh][Ee][Ll][Pp]$/) || message.content.match(/help list/)) {
             await this.sendMessage(message, help);
         }
 
-        if(message.content.match(/[Hh]elp tank/)) {
+        if(message.content.match(/[Hh][Ee][Ll][Pp] [Tt][Aa][Nn][Kk]/)) {
             await this.sendMessage(message, tanky);
         }
 
-        if (message.content.match(/[Hh]elp mana/))  {
+        if (message.content.match(/[Hh][Ee][Ll][Pp] [Mm][Aa][Nn][Aa]/))  {
             await this.sendMessage(message, mana);
         }
 
-        if (message.content.match(/[Hh]elp rare/) || message.content.match(/[Hh]elp ring/)) {
+        if (message.content.match(/[Hh][Ee][Ll][Pp] [Rr][Aa][Rr][Ee]/) || message.content.match(/[Hh]elp ring/)) {
             await this.sendMessage(message, rareRing);
         }
 
-        if (message.content.match(/[Hh]elp upgrade/)) {
+        if (message.content.match(/[Hh][Ee][Ll][Pp] [Uu][Pp][Gg][Rr][Aa][Dd][Ee]/)) {
             await this.sendMessage(message, upgrade);
         }
 
-        if (message.content.match(/[Hh]elp cdr/)) {
+        if (message.content.match(/[Hh][Ee][Ll][Pp] [Cc][Dd][Rr]/)) {
             await this.sendMessage(message, cdr);
         }
 
-        if (message.content.match(/[Hh]elp dps/) || message.content.match(/[Hh]elp pob/)) {
+        if (message.content.match(/[Hh][Ee][Ll][Pp] [Dd][Pp][Ss]/) || message.content.match(/[Hh]elp pob/)) {
             await this.sendMessage(message, pob);
         }
 
-        if (message.content.match(/[Hh]elp shock/)) {
+        if (message.content.match(/[Hh][Ee][Ll][Pp] [Ss][Hh][Oo][Cc][Kk]/)) {
             await this.sendMessage(message, shock);
         }
 
-        if (message.content.match(/[Hh]elp bubble/)) {
+        if (message.content.match(/[Hh][Ee][Ll][Pp] [Bb][Uu][Bb][Bb][Ll][Ee]/)) {
             await this.sendMessage(message, bubble);
         }
 
-        if (message.content.match(/[Hh]elp flask/)) {
+        if (message.content.match(/[Hh][Ee][Ll][Pp] [Ff][Ll][Aa][Ss][Kk]/)) {
             await this.sendMessage(message, flask);
         }
 
-        if (message.content.match(/[Hh]elp pantheon/)) {
+        if (message.content.match(/[Hh][Ee][Ll][Pp] [Pp][Aa][Nn][Tt][Hh][Ee][Oo][Nn]/)) {
             await this.sendMessage(message, pantheon);
         }
     }

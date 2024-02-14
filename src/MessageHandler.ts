@@ -1,6 +1,6 @@
 import { Client, Message, Channel, TextChannel } from 'discord.js';
 import { PlayerData } from './PlayerData';
-import {bubble, cdr, flask, help, mana, pantheon, pob, rareRing, shock, tanky, upgrade} from './helpStrings.js';
+import {bubble, cdr, flask, help, mana, pantheon, pob, rareRing, shock, tanky, upgrade, links} from './helpStrings.js';
 
 export class MessageHandler {
 
@@ -65,6 +65,10 @@ export class MessageHandler {
 
         if (message.content.match(/[Hh][Ee][Ll][Pp] [Pp][Aa][Nn][Tt][Hh][Ee][Oo][Nn]/)) {
             await this.sendMessage(message, pantheon);
+        }
+
+        if (message.content.match(/[Hh][Ee][Ll][Pp] [Ll][Ii][Nn][Kk][Ss]/)) {
+            await this.sendMessage(message, links);
         }
     }
 

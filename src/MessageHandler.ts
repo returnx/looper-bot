@@ -15,59 +15,62 @@ export class MessageHandler {
     }
 
     async handleMessage(message: Message) {
+
+        var str_message = message.content.toLowerCase();
+
         if (message.author.bot) return;
 
-        if(message.content.startsWith("check") || message.channelId === "988474586490368110") {
-            if(message.content.includes("pastebin.com") || message.content.includes("pobb.in")) {
+        if(str_message.startsWith("check") || message.channelId === "988474586490368110") {
+            if(str_message.includes("pastebin.com") || str_message.includes("pobb.in")) {
                 await this.handlePoB(message);
             }
         }
 
-        if(message.content.match(/^[Hh][Ee][Ll][Pp]$/) || message.content.match(/[Hh][Ee][Ll][Pp] [Ll][Ii][Ss][Tt]/)) {
+        if(str_message.match(/^help$/) || str_message.match(/help list/)) {
             await this.sendMessage(message, help);
         }
 
-        if(message.content.match(/[Hh][Ee][Ll][Pp] [Tt][Aa][Nn][Kk]/)) {
+        if(str_message.match(/help tank/)) {
             await this.sendMessage(message, tanky);
         }
 
-        if (message.content.match(/[Hh][Ee][Ll][Pp] [Mm][Aa][Nn][Aa]/))  {
+        if (str_message.match(/help mana/))  {
             await this.sendMessage(message, mana);
         }
 
-        if (message.content.match(/[Hh][Ee][Ll][Pp] [Rr][Aa][Rr][Ee]/) || message.content.match(/[Hh][Ee][Ll][Pp] [Rr][Ii][Nn][Gg]/)) {
+        if (str_message.match(/help rare|help ring/)) {
             await this.sendMessage(message, rareRing);
         }
 
-        if (message.content.match(/[Hh][Ee][Ll][Pp] [Uu][Pp][Gg][Rr][Aa][Dd][Ee]/)) {
+        if (str_message.match(/help upgrade/)) {
             await this.sendMessage(message, upgrade);
         }
 
-        if (message.content.match(/[Hh][Ee][Ll][Pp] [Cc][Dd][Rr]/)) {
+        if (str_message.match(/help cdr/)) {
             await this.sendMessage(message, cdr);
         }
 
-        if (message.content.match(/[Hh][Ee][Ll][Pp] [Dd][Pp][Ss]/) || message.content.match(/[[Hh][Ee][Ll][Pp] [Pp][Oo][Bb]/)) {
+        if (str_message.match(/help dps|help pob/)) {
             await this.sendMessage(message, pob);
         }
 
-        if (message.content.match(/[Hh][Ee][Ll][Pp] [Ss][Hh][Oo][Cc][Kk]/)) {
+        if (str_message.match(/help shock/)) {
             await this.sendMessage(message, shock);
         }
 
-        if (message.content.match(/[Hh][Ee][Ll][Pp] [Bb][Uu][Bb][Bb][Ll][Ee]/)) {
+        if (str_message.match(/help bubble/)) {
             await this.sendMessage(message, bubble);
         }
 
-        if (message.content.match(/[Hh][Ee][Ll][Pp] [Ff][Ll][Aa][Ss][Kk]/)) {
+        if (str_message.match(/help flask/)) {
             await this.sendMessage(message, flask);
         }
 
-        if (message.content.match(/[Hh][Ee][Ll][Pp] [Pp][Aa][Nn][Tt][Hh][Ee][Oo][Nn]/)) {
+        if (str_message.match(/help pantheon/)) {
             await this.sendMessage(message, pantheon);
         }
 
-        if (message.content.match(/[Hh][Ee][Ll][Pp] [Ll][Ii][Nn][Kk][Ss]/)) {
+        if (str_message.match(/help links/)) {
             await this.sendMessage(message, links);
         }
     }

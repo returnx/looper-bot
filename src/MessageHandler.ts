@@ -47,32 +47,19 @@ export class MessageHandler {
     const guildMember = await message.guild?.members.fetch(message.author.id);
     const joinDate = guildMember?.joinedAt;
     const currentDate = new Date();
+
     if (joinDate && currentDate.getTime() - joinDate.getTime() < 604800000) {
-      if (
-        str_message.includes('http://') ||
-        (str_message.includes('https://') &&
-          !permittedWebsites.some((website) => str_message.includes(website)))
-      ) {
-        if (
-          !guildMember?.roles.cache.some((role) =>
-            Object.values(roles).includes(role.name),
-          )
-        ) {
-          await message.delete();
+        if (str_message.includes('http://') || (str_message.includes('https://') && !permittedWebsites.some((website) => str_message.includes(website)))) {
+            if (!guildMember?.roles.cache.some((role) => Object.values(roles).includes(role.name))) {
+                await message.delete();
+            }
         }
-      }
     }
 
-    if (
-      str_message.startsWith('check') ||
-      message.channelId === '988474586490368110'
-    ) {
-      if (
-        str_message.includes('pastebin.com') ||
-        str_message.includes('pobb.in')
-      ) {
-        await this.handlePoB(message);
-      }
+    if(str_message.startsWith('check') || message.channelId === '988474586490368110') {
+        if(str_message.includes('pastebin.com') || str_message.includes('pobb.in')) {
+            await this.handlePoB(message);
+        }
     }
 
     if (str_message.match(/^help$/) || str_message.match(/help list/)) {

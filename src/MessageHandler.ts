@@ -42,6 +42,7 @@ export class MessageHandler {
       'https://pastebin.com',
       'https://cwdt.info',
       'https://pathofexile.com',
+      'https://poe.ninja'
     ];
 
     const guildMember = await message.guild?.members.fetch(message.author.id);

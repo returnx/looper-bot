@@ -51,8 +51,11 @@ export class MessageHandler {
     if (joinDate && currentDate.getTime() - joinDate.getTime() < 604800000) {
         if (str_message.includes('http://') || (str_message.includes('https://') && !permittedWebsites.some((website) => str_message.includes(website)))) {
             if (!guildMember?.roles.cache.some((role) => Object.values(roles).includes(role.name))) {
-              if(message.guildId === '852104066401173514')
+              if(message.guildId === '852104066401173514') {
+                const channel : Channel | null = await this.client.channels.fetch('995741553643499621');
+                (channel as TextChannel).send("Deleted message by " + message.author + " - Message " + message.content);
                 await message.delete();
+              }
             }
         }
     }

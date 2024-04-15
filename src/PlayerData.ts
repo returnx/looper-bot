@@ -161,12 +161,14 @@ export class PlayerData {
         multiplier = multiplier + flaskMulti + turtleMultiplier;
         // Standard Survival Secrets
         let reducedMultiplier = 0.3
+        let wardFromFlask = 200;
 
         if(this.itemString.match(/Survival Secrets/) != null) {
-            reducedMultiplier = 0.44
+            reducedMultiplier = 0.44;
+            wardFromFlask = wardFromFlask * 0.8;
         }
 
-        this.playerStats['Ward'] = (this.totalWard + 200) * multiplier * reducedMultiplier;
+        this.playerStats['Ward'] = (this.totalWard + wardFromFlask) * multiplier * reducedMultiplier;
 
         // Amethyst flask check
 

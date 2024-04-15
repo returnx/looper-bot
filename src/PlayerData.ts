@@ -149,7 +149,27 @@ export class PlayerData {
                 flaskMulti  = flaskMulti + parseInt(item.substring(0,2))/100;
             }
         }
+
+        // 3.22 Tattoos
+        let turtleMultiplier = 0;
+        const turtleArray = this.treeData.match(/3% increased Global Defences/gm);
+        if(turtleArray != null) {
+            turtleMultiplier = turtleArray.length * 3;
+            turtleMultiplier = turtleMultiplier /100;
+        }
         
+        multiplier = multiplier + flaskMulti + turtleMultiplier;
+        // Standard Survival Secrets
+        let reducedMultiplier = 0.3
+
+        if(this.itemString.match(/Survival Secrets/) != null) {
+            reducedMultiplier = 0.56
+        }
+
+        this.playerStats['Ward'] = (this.totalWard + 200) * multiplier * reducedMultiplier;
+
+        // Amethyst flask check
+
         this.chaosResistance = parseInt(this.playerStats['ChaosResist']);
         let progenesisId = null;
         this.itemManager.itemArray.forEach((value :string , key)=> {
@@ -165,21 +185,6 @@ export class PlayerData {
                 this.chaosResistance = this.chaosResistance + 35;
             }
         }
-
-        // 3.22 Tattoos
-        let turtleMultiplier = 0;
-        const turtleArray = this.treeData.match(/3% increased Global Defences/gm);
-        if(turtleArray != null) {
-            turtleMultiplier = turtleArray.length * 3;
-            turtleMultiplier = turtleMultiplier /100;
-        }
-
-        multiplier = multiplier + flaskMulti + turtleMultiplier;
-
-        this.playerStats['Ward'] = (this.totalWard + 200) * multiplier * 0.3;
-
-        // TODO -- Handle flask suffix increased ward, handle incrased effect of flasks
-        // ------------------------------------------------------------------------
 
         const ringCount = this.itemString.match(/Heartbound Loop/gm);
 
@@ -501,13 +506,11 @@ export class PlayerData {
         
         let skeletonCount = 2;
 
-        const skeletonLevel = parseInt(this.skeletonGem.level);
-
-        if(skeletonLevel > 10) {
+        if(this.skeletonGemLevel > 10) {
             skeletonCount = 3;
         }
 
-        if(skeletonLevel >=19 ) {
+        if(this.skeletonGemLevel >=21 ) {
             skeletonCount = 4;
         }
         
@@ -556,12 +559,12 @@ export class PlayerData {
             this.fixArray.push('- Required FR Damage - ' + (skeletonThreshold - this.skeletonDamage));
 
             if(this.skeletonCWDT.quality < 20) {
-                this.fixArray.push("Skeleton CWDT quality is not 20, are you sure about that?");
+                this.fixArray.push("- Skeleton CWDT quality is not 20, ignore if loop is full speed");
             }
         }
 
         if(this.frLinkedToSkeleton && this.loopRingsCount == 2 && this.skeletonGemLevel <= 20 && this.loyal!=null) {
-            if(skeletonLevel>11 || parseInt(this.skeletonCWDT.level) > 5) {
+            if(this.skeletonGemLevel > 11 || parseInt(this.skeletonCWDT.level) > 5) {
                 this.fixArray.push('- Please follow the gem links given below for fast optimal loop');
                 this.fixArray.push('- Summon Skeleton Level 11 in helm');
                 this.fixArray.push('- CWDT Level 5 in helm');
@@ -584,7 +587,7 @@ export class PlayerData {
         const skeletonLevelArray = [10, 13, 17, 21, 25, 29, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63, 66, 68, 70, 72];
         const frLevelArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
 
-        const skelRequirement = skeletonLevelArray[skeletonLevel-1];
+        const skelRequirement = skeletonLevelArray[this.skeletonGemLevel-1];
         const skelCWDTSupportMax = cwdtLevelArray[parseInt(this.skeletonCWDT.level)-1];
 
         const frLevelRequirement = frLevelArray[parseInt(this.forbiddenRite.level)-1];

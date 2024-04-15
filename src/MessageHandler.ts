@@ -42,7 +42,24 @@ export class MessageHandler {
       'https://pastebin.com',
       'https://cwdt.info',
       'https://pathofexile.com',
-      'https://poe.ninja'
+      'https://poe.ninja',
+      'https://discord.com',
+      'https://www.craftofexile.com',
+      'https://craftofexile.com',
+      'https://sudos.help',
+      'https://wealthyexile.com',
+      'https://poe.re',
+      'https://www.filterblade.xyz/',
+      'https://www.poewiki.net',
+      'https://maxroll.gg',
+      'https://www.youtube.com',
+      'https://www.twitch.tv',
+      'https://www.reddit.com',
+      'https://github.com',
+      'https://pathofbuilding.community',
+      'https://poeplanner.com',
+      'https://www.poebuilds.cc',
+      'https://www.poebuilds.cc/'
     ];
 
     const guildMember = await message.guild?.members.fetch(message.author.id);

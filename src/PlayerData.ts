@@ -163,7 +163,7 @@ export class PlayerData {
         let reducedMultiplier = 0.3
 
         if(this.itemString.match(/Survival Secrets/) != null) {
-            reducedMultiplier = 0.56
+            reducedMultiplier = 0.44
         }
 
         this.playerStats['Ward'] = (this.totalWard + 200) * multiplier * reducedMultiplier;

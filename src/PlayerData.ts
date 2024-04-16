@@ -565,8 +565,8 @@ export class PlayerData {
             }
         }
 
-        if(this.frLinkedToSkeleton && this.loopRingsCount == 2 && this.skeletonGemLevel <= 20 && this.loyal!=null) {
-            if(this.skeletonGemLevel > 11 || parseInt(this.skeletonCWDT.level) > 5) {
+        if(this.frLinkedToSkeleton && this.loopRingsCount == 2 && parseInt(this.skeletonGem.level) <= 20 && this.loyal!=null) {
+            if(parseInt(this.skeletonGem.level) > 11 || parseInt(this.skeletonCWDT.level) > 5) {
                 this.fixArray.push('- Please follow the gem links given below for fast optimal loop');
                 this.fixArray.push('- Summon Skeleton Level 11 in helm');
                 this.fixArray.push('- CWDT Level 5 in helm');
@@ -574,12 +574,12 @@ export class PlayerData {
             }
         }
 
-        if(this.frLinkedToSkeleton && this.skeletonGemLevel >= 21) {
+        if(this.frLinkedToSkeleton && parseInt(this.skeletonGem.level) >= 21) {
             this.fixArray.push("- Forbidden Rite Should be linked to CWDT in gloves/boots");
             this.fixArray.push("- Forbidden Rite Should not be linked with Summon Skeletons");
         }
 
-        if(this.frLinkedToSkeleton && this.skeletonGemLevel == 20 && this.loyal == null) {
+        if(this.frLinkedToSkeleton && parseInt(this.skeletonGem.level) == 20 && this.loyal == null) {
             this.fixArray.push("- Forbidden Rite Should be linked to CWDT in gloves/boots");
             this.fixArray.push("- Forbidden Rite Should not be linked with Summon Skeletons");
             this.fixArray.push("- Make Summon Skeleton Level 21, using Empower Support or +1 Amulet");
@@ -589,7 +589,7 @@ export class PlayerData {
         const skeletonLevelArray = [10, 13, 17, 21, 25, 29, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63, 66, 68, 70, 72];
         const frLevelArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
 
-        const skelRequirement = skeletonLevelArray[this.skeletonGemLevel-1];
+        const skelRequirement = skeletonLevelArray[parseInt(this.skeletonGem.level)-1];
         const skelCWDTSupportMax = cwdtLevelArray[parseInt(this.skeletonCWDT.level)-1];
 
         const frLevelRequirement = frLevelArray[parseInt(this.forbiddenRite.level)-1];

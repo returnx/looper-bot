@@ -42,6 +42,7 @@ export class MessageHandler {
       'https://pastebin.com',
       'https://cwdt.info',
       'https://pathofexile.com',
+      'https://www.pathofexile.com',
       'https://poe.ninja',
       'https://discord.com',
       'https://www.craftofexile.com',

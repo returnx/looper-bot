@@ -59,7 +59,7 @@ export class MessageHandler {
       'https://pathofbuilding.community',
       'https://poeplanner.com',
       'https://www.poebuilds.cc',
-      'https://www.poebuilds.cc/'
+      'https://returnx.github.io'
     ];
 
     const guildMember = await message.guild?.members.fetch(message.author.id);

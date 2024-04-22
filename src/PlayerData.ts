@@ -472,10 +472,9 @@ export class PlayerData {
         if(this.treeData.match(/8281/gm)!=null) {
             const lightOne = this.itemString.match(/Adds \d+ to \d+ Lightning Damage( to Spells)?/gm);
             const lightTwo = this.itemString.match(/\d+ to \d+ Added Spell Lightning Damage (while holding a Shield|while wielding a Two Handed Weapon)/gm);
-            const lightTree = this.treeData.match(/Tattoo of the Valako Warrior/gm);
-            if(lightOne == null && lightTwo == null && lightTree == null) {
+            if(lightOne == null && lightTwo == null) {
                 this.fixArray.push('- Missing Added Lightning Damage to Spells to trigger Elementalist Shock, you are missing damage');
-                this.fixArray.push('- Get Added Lightning Damage on Helm Implicit or Ring or Abyss jewel or Tattoo of the Valako Warrior');
+                this.fixArray.push('- Get Added Lightning Damage on Helm Implicit or Ring or Abyss jewel');
             }
         }
 

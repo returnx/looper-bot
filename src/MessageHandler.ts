@@ -73,7 +73,7 @@ export class MessageHandler {
               if(message.guildId === '852104066401173514') {
                 const channel : Channel | null = await this.client.channels.fetch('995741553643499621');
                 (channel as TextChannel).send("Deleted message by " + guildMember.displayName + " - Message " + message.content);
-                await message.delete();
+                // await message.delete();
               }
             }
         }

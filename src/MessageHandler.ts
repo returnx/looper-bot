@@ -152,6 +152,7 @@ export class MessageHandler {
       await playerData.initlizeData();
     } catch (err) {
       console.log('This has failed ' + message.content);
+      console.error("Error processing message", err)
       this.sendMessage(
         message,
         'ERROR - The PoB is an invalid CWDT build or the URL is 404',

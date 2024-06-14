@@ -61,7 +61,7 @@ export class PlayerData {
     pobString : any;
     pobJson : any;
     activeTree : any;
-
+    pantheon = {major: "", minor: ""};
     fixArray : string[] = [];
 
     lords : RegExpMatchArray | null = null;
@@ -100,6 +100,7 @@ export class PlayerData {
 
         const jsonData = await xml2js.parseStringPromise(data);
         this.pobJson = jsonData;
+        this.initConfig(jsonData?.PathOfBuilding?.Config)
         
         const treeNumber = parseInt(jsonData.PathOfBuilding.Tree[0].$.activeSpec);
         this.activeTree = jsonData.PathOfBuilding.Tree[0].Spec[treeNumber-1];
@@ -500,6 +501,18 @@ export class PlayerData {
             this.fixArray.push("- You have Ancestral Bond, do you want to play Totems?")
         }
 
+        if (this.pantheon.major === "" || this.pantheon.minor === "") {
+            this.fixArray.push("- You've not configured your pantheon in PoB. It's easy to brick your build with the wrong selection!")
+        } else {
+            if(["TheBrineKing", "Arakaali"].find((element) => element === this.pantheon.major) === undefined) {
+                this.fixArray.push("- Your major god is unsupported! Please see https://cwdt.info/faq/pantheon")
+            }
+    
+            if(["Yugul", "Garukhan"].find((element) => element === this.pantheon.minor) === undefined) {
+                this.fixArray.push("- Your minor god is unsupported! Please see https://cwdt.info/faq/pantheon")
+            }
+        }
+
         return Promise.resolve();
     }
 
@@ -719,6 +732,19 @@ export class PlayerData {
         if(Object.keys(this.bodyCWDT).length === 0) {
             this.fixArray.push('- CWDT Gem in Body is missing? Using Weapon CWDT for check');
             this.setGemData(this.bodyCWDT, this.weaponCWDT,"Body Armour");        }
+    }
+
+    private initConfig(config?: any[]) {
+        if (config?.length === 0) {
+            return
+        }
+        config?.[0].Input.forEach((inputConfig: any) => {
+            if(inputConfig.$.name === "pantheonMajorGod") {
+                this.pantheon.major = inputConfig.$.string
+            } else if (inputConfig.$.name === "pantheonMinorGod") {
+                this.pantheon.minor = inputConfig.$.string
+            }
+        })
     }
 
     checkGemLinks() {

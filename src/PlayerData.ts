@@ -161,11 +161,11 @@ export class PlayerData {
         
         multiplier = multiplier + flaskMulti + turtleMultiplier;
         // Standard Survival Secrets
-        let reducedMultiplier = 0.3
+        let reducedMultiplier = 0.15
         let wardFromFlask = 200;
 
         if(this.itemString.match(/Survival Secrets/) != null) {
-            reducedMultiplier = 0.44;
+            reducedMultiplier = 0.32;
             wardFromFlask = wardFromFlask * 0.8;
         }
 

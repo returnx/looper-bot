@@ -134,6 +134,25 @@ export class PlayerData {
             this.totalWard = this.totalWard + parseInt( item.substring(6, 9) );
         }
 
+        // ward from ynda's
+        const yndaStr = this.itemString.match(/Gain Ward instead of \d\d% of Armour and Evasion Rating from Equipped Body Armour/);
+        let yndaMulti = 0; let wardFromYnda = 0;
+        if(yndaStr !=null) {
+            yndaMulti = parseInt(yndaStr[0].match(/\d+/)![0]);
+
+            const bodySlotStr = this.pobString.match(/<Slot itemPbURL="" name="Body Armour" itemId="\d+"\/>/);
+            if(bodySlotStr!=null) {
+                const slotNumberArr = bodySlotStr[0].match(/\d+/);
+                if(slotNumberArr!=null) {
+                    const bodyID = slotNumberArr[0];
+
+                    const bodyStr = this.itemManager.itemArray.get(parseInt(bodyID));
+                    const evasion = parseInt(bodyStr!.match(/Evasion: (\d+)/)![1]);
+                    wardFromYnda = evasion * (yndaMulti/100);
+                }
+            }
+        }
+
         let skin = false;
         if(this.loyal!=null || this.lords!=null) skin = true;
  
@@ -149,7 +168,7 @@ export class PlayerData {
                 flaskMulti  = flaskMulti + parseInt(item.substring(0,2))/100;
             }
         }
-
+        
         // 3.22 Tattoos
         let turtleMultiplier = 0;
         const turtleArray = this.treeData.match(/3% increased Global Defences/gm);
@@ -159,16 +178,23 @@ export class PlayerData {
         }
         
         multiplier = multiplier + flaskMulti + turtleMultiplier;
-        // Standard Survival Secrets
-        let reducedMultiplier = 0.3
+        
+        let reducedMultiplier = 0;
+
+        const lessWardStr = this.itemString.match(/\d\d[%] less Ward during Effect/);
+        if(lessWardStr!=null) {
+            reducedMultiplier = (100 - parseInt(lessWardStr[0].substring(0, 2)))/100;
+        }
+
         let wardFromFlask = 200;
 
+        // Standard Survival Secrets
         if(this.itemString.match(/Survival Secrets/) != null) {
             reducedMultiplier = 0.44;
             wardFromFlask = wardFromFlask * 0.8;
         }
 
-        this.playerStats['Ward'] = (this.totalWard + wardFromFlask) * multiplier * reducedMultiplier;
+        // this.playerStats['Ward'] = (this.totalWard + wardFromFlask + wardFromYnda) * multiplier * reducedMultiplier;
 
         // Amethyst flask check
 
